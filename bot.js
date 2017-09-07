@@ -2,12 +2,15 @@ const Discord = require("discord.js");
 var bot = new Discord.Client();
 var config = require('./storage/config.json');
 const TOKEN = config.token;
-const BOTNAME = "IOU Bot";
+const BOTNAME = "IOU Friend";
 const PREFIX = "?";
+const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type ?help to get DMed the current list of commands \n" + "Type ?suggest to get a link to suggestions";
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
 	bot.user.setGame("?help ?info");
+    bot.user.setAvatar("./storage/avatar.png")
+    bot.user.setUsername(BOTNAME)
 });
 
 bot.on("message", function(message) {
@@ -76,10 +79,10 @@ bot.on("message", function(message) {
             break;
         case "info":
             var embed = new Discord.RichEmbed()
-                .addField(BOTNAME, "IOU Bot is made by love (and nodejs) by Level")
+                .addField(BOTNAME, BOTNAME + BOTDESC)
                 .setColor(0x9B59B6)
                 .setFooter("Source code: https://github.com/puremana/iou-bot")
-                .setThumbnail("")
+                .setThumbnail(bot.user.avatarURL)
             message.channel.send(embed);
             break;
         case "suggest":
