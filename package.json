@@ -1,0 +1,14 @@
+{
+  "name": "iou-bot",
+  "version": "1.0.0",
+  "description": "IOU Discord bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Level",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
