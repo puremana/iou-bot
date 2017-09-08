@@ -1,16 +1,18 @@
 const Discord = require("discord.js");
 var bot = new Discord.Client();
+var fs = require("fs");
 var config = require('./storage/config.json');
+var customCommands = require('./storage/custom.json');
 const TOKEN = config.token;
 const BOTNAME = "IOU Friend";
 const PREFIX = "?";
-const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type ?help to get DMed the current list of commands \n" + "Type ?suggest to get a link to suggestions";
+const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **?help** to get DMed the current list of commands \n" + "Type **?suggest** to get a link to suggestions";
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
-	bot.user.setGame("?help ?info");
+	bot.user.setGame("?help ?info")
     bot.user.setAvatar("./storage/avatar.png")
-    bot.user.setUsername(BOTNAME)
+    //bot.user.setUsername(BOTNAME)
 });
 
 bot.on("message", function(message) {
@@ -24,16 +26,29 @@ bot.on("message", function(message) {
     
     var args = message.content.substring(PREFIX.length).split(" ");
     
+    for (c in customCommands) {
+        if (args[0] == c) {
+            message.channel.send(customCommands[c]);
+            return;
+        }
+    }
+    
     switch (args[0].toLowerCase()) {
         //Challenge Commands
-        case "bronze":       
-            message.channel.send("http://i.imgur.com/POra9Kx.jpg");
+        case "bronze":
+            if (message.channel.id == "355250699841568768") {
+                message.channel.send("http://i.imgur.com/POra9Kx.jpg");
+            }
             break;
         case "silver":
-            message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
+            if (message.channel.id == "355250699841568768") {
+                message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
+            }
             break;
         case "gold":
-            message.channel.send("http://i.imgur.com/5GXghiA.jpg");
+            if (message.channel.id == "355250699841568768") {
+                message.channel.send("http://i.imgur.com/5GXghiA.jpg");
+            }
             break;
             
         //Event Commands
@@ -52,10 +67,15 @@ bot.on("message", function(message) {
         
         //Bot Related Commands
         case "help":
+            var customP = "";
+            for (c in customCommands) {
+                customP = customP + PREFIX + c + "\n";
+            }
             var help = "**Bot Related Commands** \n" +
             PREFIX + "help \n" + 
             PREFIX + "info \n" +
             PREFIX + "suggest \n" +
+            PREFIX + "add *(Admin only)* \n" +    
             "**Challenge Commands** \n" +
             PREFIX + "bronze \n" +
             PREFIX + "silver \n" +
@@ -74,7 +94,7 @@ bot.on("message", function(message) {
             PREFIX + "test \n" +
             PREFIX + "trello \n" +
             "**Other Commands** \n" +
-            "";
+            customP;
             message.author.send(help);
             break;
         case "info":
@@ -88,6 +108,21 @@ bot.on("message", function(message) {
         case "suggest":
             message.channel.send("Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
             break;
+        case "add":
+            if (message.member.roles.find("name", "IOU Team")) {
+                var desc = "";
+                for (d = 2; d < args.length; d++) {
+                    desc = desc + args[d] + " ";
+                }
+                var command = "{\'" + args[1] + "': '" + desc + "',";
+                customCommands[args[1]] = desc;
+                fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
+                message.channel.send("Command " + PREFIX + args[1] + " added.");
+            }
+            else {
+                message.channel.send("You do not have the IOU Team role.");
+            }
+            break;    
             
         //Useful Links
         case "guide":
@@ -111,6 +146,7 @@ bot.on("message", function(message) {
         case "trello":
             message.channel.send("https://trello.com/b/usVhG9Ry/iou-development-board");
             break;
+            
         default:
             message.channel.send("Invalid command, type **?help** to get current list of commands");
     }
