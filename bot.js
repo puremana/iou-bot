@@ -37,17 +37,17 @@ bot.on("message", function(message) {
     switch (args[0].toLowerCase()) {
         //Challenge Commands
         case "bronze":
-            if (message.channel.id == "355250699841568768") {
+            if (message.channel.id == "146030310767722496") {
                 message.channel.send("http://i.imgur.com/POra9Kx.jpg");
             }
             break;
         case "silver":
-            if (message.channel.id == "355250699841568768") {
+            if (message.channel.id == "146030310767722496") {
                 message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
             }
             break;
         case "gold":
-            if (message.channel.id == "355250699841568768") {
+            if (message.channel.id == "146030310767722496") {
                 message.channel.send("http://i.imgur.com/5GXghiA.jpg");
             }
             break;
