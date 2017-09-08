@@ -3,6 +3,7 @@ var bot = new Discord.Client();
 var fs = require("fs");
 var config = require('./storage/config.json');
 var customCommands = require('./storage/custom.json');
+var parties = require('./storage/parties.json');
 const TOKEN = config.token;
 const BOTNAME = "IOU Friend";
 const PREFIX = "?";
@@ -75,11 +76,18 @@ bot.on("message", function(message) {
             PREFIX + "help \n" + 
             PREFIX + "info \n" +
             PREFIX + "suggest \n" +
-            PREFIX + "add *(Admin only)* \n" +    
+            PREFIX + "add *(IOU Team only)* \n" +  
+            PREFIX + "remove *(IOU Team only)* \n" +  
             "**Challenge Commands** \n" +
             PREFIX + "bronze \n" +
             PREFIX + "silver \n" +
             PREFIX + "gold \n" +
+            "**Party/Guild Commands** \n" +
+            PREFIX + "addparty \n" +
+            PREFIX + "removeparty \n" +
+            PREFIX + "resetparties *(IOU Team only)*\n" +
+            PREFIX + "parties \n" +
+            PREFIX + "partyhelp \n" +
             "**Event Commands** \n" +
             PREFIX + "invasion \n" + 
             PREFIX + "energyevent \n" + 
@@ -93,7 +101,7 @@ bot.on("message", function(message) {
             PREFIX + "cards \n" +
             PREFIX + "test \n" +
             PREFIX + "trello \n" +
-            "**Other Commands** \n" +
+            "**Custom Commands** \n" +
             customP;
             message.author.send(help);
             break;
@@ -114,7 +122,7 @@ bot.on("message", function(message) {
                 for (d = 2; d < args.length; d++) {
                     desc = desc + args[d] + " ";
                 }
-                var command = "{\'" + args[1] + "': '" + desc + "',";
+                var command = "\'" + args[1] + "': '" + desc + "',";
                 customCommands[args[1]] = desc;
                 fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
                 message.channel.send("Command " + PREFIX + args[1] + " added.");
@@ -122,7 +130,72 @@ bot.on("message", function(message) {
             else {
                 message.channel.send("You do not have the IOU Team role.");
             }
-            break;    
+            break;
+        case "remove":
+            if (message.member.roles.find("name", "IOU Team")) {
+                for (c in customCommands) {
+                    if (args[1] == c) {
+                        delete customCommands[c];
+                        fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
+                        message.channel.send("Command " + PREFIX + args[1] + " removed.");
+                        return;
+                    }
+                }
+                message.channel.send("There is no " + PREFIX + args[1] + " command.");
+            }
+            else {
+                message.channel.send("You do not have the IOU Team role.");
+            }
+            break;
+        
+        //Parties - Guilds    
+        case "addparty":
+            var date = new Date();
+            var current = date.toString();
+            var desc = "";
+            for (i = 2; i < args.length; i++) {
+                desc = desc + args[i] + " ";
+            }
+            //make it an array :]
+            var pJson = [current, message.member.displayName, args[1], desc];
+            parties[message.member.id] = pJson;
+            fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
+            message.channel.send("Party added. Type **?parties** to get sent a list of current available parties");
+            break;
+        case "removeparty":
+            for (p in parties) {
+                if (message.member.id == p) {
+                    delete parties[p];
+                    fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
+                    message.channel.send("Party removed.");
+                    return;
+                }
+            }
+            message.channel.send("Couldn't find party for " + message.member.displayName);
+            break;
+        case "resetparties":
+            if (message.member.roles.find("name", "IOU Team")) {
+                parties = {};
+                parties["id"] = ['time','name','required dps','description'];
+                fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
+                message.channel.send("All parties have been reset.");
+            }
+            else {
+                message.channel.send("You do not have the IOU Team role.");
+            }
+            break;
+        case "parties":
+            for (p in parties) {
+                var embed = new Discord.RichEmbed()
+                .addField(parties[p][1] + " - " + parties[p][2], parties[p][3])
+                .setColor(0x1A8CBE)
+                .setFooter(parties[p][0])
+                message.author.send(embed);
+            }
+            break;
+        case "partyhelp":
+            message.channel.send("Type **?addparty** with the following format to add a party \n" + "`?addparty required-dps description`");
+            break;
             
         //Useful Links
         case "guide":
