@@ -28,7 +28,7 @@ bot.on("message", function(message) {
     var args = message.content.substring(PREFIX.length).split(" ");
     
     for (c in customCommands) {
-        if (args[0] == c) {
+        if (args[0].toLowerCase() == c) {
             message.channel.send(customCommands[c]);
             return;
         }
@@ -130,8 +130,8 @@ bot.on("message", function(message) {
                 for (d = 2; d < args.length; d++) {
                     desc = desc + args[d] + " ";
                 }
-                var command = "\'" + args[1] + "': '" + desc + "',";
-                customCommands[args[1]] = desc;
+                var command = "\'" + args[1].toLowerCase() + "': '" + desc + "',";
+                customCommands[args[1].toLowerCase()] = desc;
                 fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
                 message.channel.send("Command " + PREFIX + args[1] + " added.");
             }
@@ -147,7 +147,7 @@ bot.on("message", function(message) {
             if (message.member.roles.find("name", "IOU Team")) {
                 if (args.length == 2) {
                     for (c in customCommands) {
-                        if (args[1] == c) {
+                        if (args[1].toLowerCase() == c) {
                             delete customCommands[c];
                             fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
                             message.channel.send("Command " + PREFIX + args[1] + " removed.");
