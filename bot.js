@@ -253,7 +253,9 @@ bot.on("message", function(message) {
         case "trello":
             message.channel.send("https://trello.com/b/usVhG9Ry/iou-development-board");
             break;
-            
+    
+        case "":
+            return;
         default:
             message.channel.send("Invalid command, type **?help** to get current list of commands");
     }
