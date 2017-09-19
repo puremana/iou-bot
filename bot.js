@@ -118,6 +118,10 @@ bot.on("message", function(message) {
             break;
         case "add":
             if (message.member.roles.find("name", "IOU Team")) {
+                if (args.length < 2) {
+                    message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
+                    return;
+                }
                 var desc = "";
                 for (d = 2; d < args.length; d++) {
                     desc = desc + args[d] + " ";
@@ -133,15 +137,21 @@ bot.on("message", function(message) {
             break;
         case "remove":
             if (message.member.roles.find("name", "IOU Team")) {
-                for (c in customCommands) {
-                    if (args[1] == c) {
-                        delete customCommands[c];
-                        fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
-                        message.channel.send("Command " + PREFIX + args[1] + " removed.");
-                        return;
+                if (args.length == 2) {
+                    for (c in customCommands) {
+                        if (args[1] == c) {
+                            delete customCommands[c];
+                            fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
+                            message.channel.send("Command " + PREFIX + args[1] + " removed.");
+                            return;
+                        }
                     }
+                    message.channel.send("There is no " + PREFIX + args[1] + " command.");
                 }
-                message.channel.send("There is no " + PREFIX + args[1] + " command.");
+                else {
+                    message.channel.send("Please enter the command in the format `" + PREFIX + "remove command_name`.");
+                    return;
+                }
             }
             else {
                 message.channel.send("You do not have the IOU Team role.");
@@ -150,6 +160,10 @@ bot.on("message", function(message) {
         
         //Parties - Guilds    
         case "addparty":
+            if (args.length < 3) {
+                message.channel.send("Please enter the command in the format `" + PREFIX + "addparty required-dps description`.");
+                return;
+            }
             var date = new Date();
             var current = date.toString();
             var desc = "";
