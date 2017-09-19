@@ -117,6 +117,10 @@ bot.on("message", function(message) {
             message.channel.send("Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
             break;
         case "add":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
             if (message.member.roles.find("name", "IOU Team")) {
                 if (args.length < 2) {
                     message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
@@ -136,6 +140,10 @@ bot.on("message", function(message) {
             }
             break;
         case "remove":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
             if (message.member.roles.find("name", "IOU Team")) {
                 if (args.length == 2) {
                     for (c in customCommands) {
@@ -160,6 +168,10 @@ bot.on("message", function(message) {
         
         //Parties - Guilds    
         case "addparty":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
             if (args.length < 3) {
                 message.channel.send("Please enter the command in the format `" + PREFIX + "addparty required-dps description`.");
                 return;
@@ -177,6 +189,10 @@ bot.on("message", function(message) {
             message.channel.send("Party added. Type **?parties** to get sent a list of current available parties");
             break;
         case "removeparty":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
             for (p in parties) {
                 if (message.member.id == p) {
                     delete parties[p];
@@ -188,6 +204,10 @@ bot.on("message", function(message) {
             message.channel.send("Couldn't find party for " + message.member.displayName);
             break;
         case "resetparties":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
             if (message.member.roles.find("name", "IOU Team")) {
                 parties = {};
                 parties["id"] = ['time','name','required dps','description'];
