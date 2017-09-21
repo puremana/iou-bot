@@ -83,7 +83,7 @@ bot.on("message", function(message) {
             PREFIX + "silver \n" +
             PREFIX + "gold \n" +
             "**Party/Guild Commands** \n" +
-            PREFIX + "addparty \n" +
+            PREFIX + "addparty - Format `?addparty required-dps description` \n" +
             PREFIX + "removeparty \n" +
             PREFIX + "resetparties *(IOU Team only)*\n" +
             PREFIX + "parties \n" +
@@ -227,9 +227,6 @@ bot.on("message", function(message) {
                 message.author.send(embed);
             }
             break;
-        case "partyhelp":
-            message.channel.send("Type **?addparty** with the following format to add a party \n" + "`?addparty required-dps description`");
-            break;
 
         case "addguild":
             if (message.member == null) {
@@ -300,6 +297,22 @@ bot.on("message", function(message) {
             else {
                 message.channel.send("You do not have the IOU Team role.");
             }
+            break;
+        case "removeguild":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
+            for (g in guilds) {
+                if (message.member.id == g) {
+                    var guildName = guilds[g][3];
+                    delete guilds[g];
+                    fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
+                    message.channel.send(guildName + " guild removed.");
+                    return;
+                }
+            }
+            message.channel.send("Couldn't find party for " + message.member.displayName);
             break;
         case "guilds":
             for (g in guilds) {
