@@ -4,8 +4,9 @@ var fs = require("fs");
 var config = require('./storage/config.json');
 var customCommands = require('./storage/custom.json');
 var parties = require('./storage/parties.json');
+var guilds = require('./storage/guilds.json');
 const TOKEN = config.token;
-const BOTNAME = "IOU Friend";
+const BOTNAME = "iou bot";
 const PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **?help** to get DMed the current list of commands \n" + "Type **?suggest** to get a link to suggestions";
 
@@ -13,7 +14,6 @@ bot.on("ready", function() {
 	console.log("Bot ready...")
 	bot.user.setGame("?help ?info")
     bot.user.setAvatar("./storage/avatar.png")
-    //bot.user.setUsername(BOTNAME)
 });
 
 bot.on("message", function(message) {
@@ -230,7 +230,100 @@ bot.on("message", function(message) {
         case "partyhelp":
             message.channel.send("Type **?addparty** with the following format to add a party \n" + "`?addparty required-dps description`");
             break;
-            
+
+        case "addguild":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }    
+            if (args.length < 3) {
+                message.channel.send("Please enter the command in the format `" + PREFIX + "addguild \"guildname\" description`.");
+                return;
+            }
+            var date = new Date();
+            var current = date.toString();
+            var desc = "";
+            for (i = 1; i < args.length; i++) {
+                desc = desc + args[i] + " ";
+            }
+
+            var rawSplit = desc.split("\"");
+            if (rawSplit.length > 1) {
+                var guildName = rawSplit[1];
+                var desc = "";
+                for (i = 2; i < rawSplit.length; i++) {
+                    desc = desc + rawSplit[i] + " ";
+                }
+            }
+            else {
+                var guildName = args[1];
+                var desc = desc.substr(desc.indexOf(" ") + 1);
+            }
+            message.channel.send(guildName + " " + desc);
+            var gJson = ["normal", current, message.member.displayName, guildName, desc];
+            guilds[message.member.id] = gJson;
+            fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
+            message.channel.send("Guild " + guildName + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
+            break;
+        case "addguildformat":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
+            var desc = "";
+            for (i = 0; i < args.length; i++) {
+                desc = desc + args[i] + " ";
+            }
+            var rawSplit = desc.split("\"");
+            if (rawSplit.length != 17) {
+                message.channel.send("Please enter the command in the following format `" + PREFIX + "addguildformat \"guild name\" \"guild level\" \"guild buildings\" \"stone required\" \"DPS required\" \"members in guild\" \"spots open\" \"description\"`");
+                return;
+            }
+            var date = new Date();
+            var current = date.toString();
+            var gJson = ["format", current, message.member.displayName, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
+            //message.channel.send(gJson.toString());
+            guilds[message.member.id] = gJson;
+            fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
+            message.channel.send("Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
+            break;
+        case "resetguilds":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
+            if (message.member.roles.find("name", "IOU Team")) {
+                guilds = {};
+                fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
+                message.channel.send("All guilds have been reset.");
+            }
+            else {
+                message.channel.send("You do not have the IOU Team role.");
+            }
+            break;
+        case "guilds":
+            for (g in guilds) {
+                if (guilds[g][0] == "format") {
+                    var embed = new Discord.RichEmbed()
+                    .addField(guilds[g][3] + " - " + guilds[g][2], guilds[g][10])
+                    .addField("Guild Level", guilds[g][4], true)
+                    .addField("Guild Buildings", guilds[g][5], true)
+                    .addField("Stone Required", guilds[g][6], true)
+                    .addField("DPS Required", guilds[g][7], true)
+                    .addField("Members", guilds[g][8] + "/40", true)
+                    .addField("Spots Open", guilds[g][9], true)
+                    .setColor(0xFFC300)
+                    .setFooter(guilds[g][1])
+                }
+                else {
+                    var embed = new Discord.RichEmbed()
+                    .addField(guilds[g][3] + " - " + guilds[g][2], guilds[g][4])
+                    .setColor(0xFFC300)
+                    .setFooter(guilds[g][1])
+                }
+                message.author.send(embed);
+            }
+            break;
         //Useful Links
         case "guide":
             message.channel.send("https://tinyurl.com/IOUguide");
@@ -257,7 +350,7 @@ bot.on("message", function(message) {
         case "":
             return;
         default:
-            message.channel.send("Invalid command, type **?help** to get current list of commands");
+            message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
     }
 });
        
