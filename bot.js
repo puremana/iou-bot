@@ -359,7 +359,20 @@ bot.on("message", function(message) {
         case "trello":
             message.channel.send("https://trello.com/b/usVhG9Ry/iou-development-board");
             break;
-    
+            
+        //fun
+        case "cat":
+            Promise.all([httpRequest("random.cat", "/meow")]).then(values => { 
+                catJson = JSON.parse(values[0]);
+                message.channel.send(catJson.file);
+            });
+            break; 
+        case "dog":
+            Promise.all([httpRequest("dog.ceo", "/api/breeds/image/random")]).then(values => { 
+                dogJson = JSON.parse(values[0]);
+                message.channel.send(dogJson.message);
+            });
+            break;   
         case "":
             return;
         default:
@@ -368,3 +381,27 @@ bot.on("message", function(message) {
 });
        
 bot.login(TOKEN);
+
+var httpRequest = function (url, ranHost) {
+    return new Promise((resolve, reject) => {
+        var http = require('http');
+    
+        var options = {
+            host: url,
+            path: ranHost
+        }
+        var request = http.request(options, function (res) {
+            var data = '';
+            res.on('data', function (chunk) {
+                data += chunk;
+            });
+            res.on('end', function () {
+                resolve(data);
+            });
+        });
+        request.on('error', function (e) {
+            reject(e.message);
+        });
+        request.end();
+    });
+  };
