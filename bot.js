@@ -160,7 +160,7 @@ bot.on("message", function(message) {
                 return;
             }
             if (message.member.roles.find("name", "IOU Team")) {
-                if (args.length < 2) {
+                if (args.length < 3) {
                     message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
                     return;
                 }
