@@ -362,17 +362,32 @@ bot.on("message", function(message) {
             
         //fun
         case "cat":
-            Promise.all([httpRequest("random.cat", "/meow")]).then(values => { 
+            Promise.all([httpRequest("http", "random.cat", "/meow")]).then(values => { 
                 catJson = JSON.parse(values[0]);
                 message.channel.send(catJson.file);
             });
             break; 
         case "dog":
-            Promise.all([httpRequest("dog.ceo", "/api/breeds/image/random")]).then(values => { 
+            Promise.all([httpRequest("https", "dog.ceo", "/api/breeds/image/random")]).then(values => { 
                 dogJson = JSON.parse(values[0]);
                 message.channel.send(dogJson.message);
             });
-            break;   
+            break;
+        case "flip":
+            var toss = (Math.floor(Math.random() * 2) == 0);
+            if (toss) {
+                message.channel.send("Heads");
+            } 
+            else {
+                message.channel.send("Tails");
+            }
+            break;
+        case "8ball":
+            Promise.all([httpRequest("https", "8ball.delegator.com", "/magic/JSON/abc")]).then(values => { 
+                ballJson = JSON.parse(values[0]);
+                message.channel.send(ballJson.magic.answer);
+            });
+            break;
         case "":
             return;
         default:
@@ -382,9 +397,9 @@ bot.on("message", function(message) {
        
 bot.login(TOKEN);
 
-var httpRequest = function (url, ranHost) {
+var httpRequest = function (type, url, ranHost) {
     return new Promise((resolve, reject) => {
-        var http = require('http');
+        var http = require(type);
     
         var options = {
             host: url,
