@@ -126,6 +126,11 @@ bot.on("message", function(message) {
             PREFIX + "test \n" +
             PREFIX + "trello \n";
 
+            var funCommands = PREFIX + "cat " +
+            PREFIX + "dog " +
+            PREFIX + "flip " +
+            PREFIX + "8ball ";
+
             var embed = new Discord.RichEmbed()
             .setAuthor("Showing commands for - " + showingRoles, message.member.user.avatarURL)
             .addField("Bot Related Commands", botRelated, true)
@@ -134,6 +139,7 @@ bot.on("message", function(message) {
             .addField("Event Commands", eventCommands, true)
             .addField("Useful Links", usefulLinks, true)
             .addField("Custom Commands", customP, true)
+            .setFooter("Fun Commands " + funCommands)
             .setColor(0x9B59B6)
             message.author.send(embed);
             break;
@@ -394,18 +400,27 @@ bot.on("message", function(message) {
             
         //fun
         case "cat":
+            if (message.channel.id != "211679243304828929") {
+                return;
+            }
             Promise.all([httpRequest("http", "random.cat", "/meow")]).then(values => { 
                 catJson = JSON.parse(values[0]);
                 message.channel.send(catJson.file);
             });
             break; 
         case "dog":
+            if (message.channel.id != "211679243304828929") {
+                return;
+            }
             Promise.all([httpRequest("https", "dog.ceo", "/api/breeds/image/random")]).then(values => { 
                 dogJson = JSON.parse(values[0]);
                 message.channel.send(dogJson.message);
             });
             break;
         case "flip":
+            if (message.channel.id != "211679243304828929") {
+                return;
+            }
             var toss = (Math.floor(Math.random() * 2) == 0);
             if (toss) {
                 message.channel.send("Heads");
@@ -415,6 +430,9 @@ bot.on("message", function(message) {
             }
             break;
         case "8ball":
+            if (message.channel.id != "211679243304828929") {
+                return;
+            }
             Promise.all([httpRequest("https", "8ball.delegator.com", "/magic/JSON/abc")]).then(values => { 
                 ballJson = JSON.parse(values[0]);
                 message.channel.send(ballJson.magic.answer);
