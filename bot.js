@@ -8,11 +8,11 @@ var guilds = require('./storage/guilds.json');
 const TOKEN = config.token;
 const BOTNAME = "iou bot";
 const PREFIX = "?";
-const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **?help** to get DMed the current list of commands \n" + "Type **?suggest** to get a link to suggestions";
+const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
-	bot.user.setGame("?help ?info")
+	bot.user.setGame(PREFIX + "help " + PREFIX + "info")
     bot.user.setAvatar("./storage/avatar.png")
 });
 
@@ -68,42 +68,74 @@ bot.on("message", function(message) {
         
         //Bot Related Commands
         case "help":
+            if (message.member == null) {
+                message.channel.send("Message author is undefined.");
+                return;
+            }
+            var showingRoles = "";
+            var additionalBot = "";
+            var additionalParty = "";
+            var additionalGuild = "";
+            if (message.member.roles.find("name", "IOU Team")) {
+                showingRoles = "IOU Team";
+                additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
+                PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
+                additionalParty = PREFIX + "resetparties *(IOU Team only)* \n";
+                additionalGuild = PREFIX + "resetguilds *(IOU Team only)* \n";
+            }
+            else if (message.member.roles.find("name", "Spun & Spud")) {
+                showingRoles = "Spun & Spud";
+            }
+            else {
+                showingRoles = "Member";
+            }
             var customP = "";
             for (c in customCommands) {
                 customP = customP + PREFIX + c + "\n";
             }
-            var help = "**Bot Related Commands** \n" +
-            PREFIX + "help \n" + 
+
+            var botRelated = PREFIX + "help \n" + 
             PREFIX + "info \n" +
             PREFIX + "suggest \n" +
-            PREFIX + "add *(IOU Team only)* \n" +  
-            PREFIX + "remove *(IOU Team only)* \n" +  
-            "**Challenge Commands** \n" +
-            PREFIX + "bronze \n" +
+            additionalBot;
+
+            var challengeCommands = PREFIX + "bronze \n" +
             PREFIX + "silver \n" +
-            PREFIX + "gold \n" +
-            "**Party/Guild Commands** \n" +
-            PREFIX + "addparty - Format `?addparty required-dps description` \n" +
+            PREFIX + "gold \n";
+
+            var partyGuild = PREFIX + "addparty - `" + PREFIX + "addparty required-dps description` \n" +
             PREFIX + "removeparty \n" +
-            PREFIX + "resetparties *(IOU Team only)*\n" +
             PREFIX + "parties \n" +
-            PREFIX + "partyhelp \n" +
-            "**Event Commands** \n" +
-            PREFIX + "invasion \n" + 
+            additionalParty + 
+            PREFIX + "addguild - `" + PREFIX + "addguild \"guild name\" description` \n" +
+            PREFIX + "addguildformat - `" + PREFIX + "addguildformat \"guild name\" \"guild level\" \"guild buildings\" \"stone required\" \"DPS required\" \"members in guild\" \"spots open\" \"description\"` \n" +
+            PREFIX + "removeguild \n" +
+            PREFIX + "guilds \n" +
+            additionalGuild;
+
+            var eventCommands = PREFIX + "invasion \n" + 
             PREFIX + "energyevent \n" + 
             PREFIX + "rpg \n" + 
-            PREFIX + "mafia \n" + 
-            "**Useful Links** \n" + 
-            PREFIX + "guide \n" +
+            PREFIX + "mafia \n";
+
+            var usefulLinks =  PREFIX + "guide \n" +
             PREFIX + "multicalc \n" +
             PREFIX + "forum \n" +
             PREFIX + "wiki \n" +
             PREFIX + "cards \n" +
             PREFIX + "test \n" +
-            PREFIX + "trello \n" +
-            "**Custom Commands** \n" +
-            customP;
-            message.author.send(help);
+            PREFIX + "trello \n";
+
+            var embed = new Discord.RichEmbed()
+            .setAuthor("Showing commands for - " + showingRoles, message.member.user.avatarURL)
+            .addField("Bot Related Commands", botRelated, true)
+            .addField("Challenge Commands", challengeCommands, true)
+            .addField("Party/Guild Commands", partyGuild)
+            .addField("Event Commands", eventCommands, true)
+            .addField("Useful Links", usefulLinks, true)
+            .addField("Custom Commands", customP, true)
+            .setColor(0x9B59B6)
+            message.author.send(embed);
             break;
         case "info":
             var embed = new Discord.RichEmbed()
@@ -186,7 +218,7 @@ bot.on("message", function(message) {
             var pJson = [current, message.member.displayName, args[1], desc];
             parties[message.member.id] = pJson;
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
-            message.channel.send("Party added. Type **?parties** to get sent a list of current available parties");
+            message.channel.send("Party added. Type **" + PREFIX + "parties** to get sent a list of current available parties");
             break;
         case "removeparty":
             if (message.member == null) {
