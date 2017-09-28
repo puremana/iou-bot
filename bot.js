@@ -9,6 +9,7 @@ const TOKEN = config.token;
 const BOTNAME = "iou bot";
 const PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
+var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
@@ -66,6 +67,16 @@ bot.on("message", function(message) {
             message.channel.send("https://docs.google.com/spreadsheets/d/1AzBi0Dt9AePvASVeiWAUSSVcpTHfpQlUzDrIWxCL8AA/edit#gid=0");
             break;
         
+        case "time":
+            var offset = -5.0
+            var date = new Date();
+            var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+            var EST = new Date(utc + (3600000*offset));
+        
+            var stringDate = EST.getDate() + "/" + EST.getMonth() + "/" + EST.getFullYear();
+            var stringTime = EST.getHours() + ":" + EST.getMinutes() + ":" + EST.getSeconds();
+            message.author.send(days[EST.getDay()] + " " + stringDate + " " + stringTime + " EST");
+            break;    
         //Bot Related Commands
         case "help":
             if (message.member == null) {
