@@ -6,7 +6,7 @@ var customCommands = require('./storage/custom.json');
 var parties = require('./storage/parties.json');
 var guilds = require('./storage/guilds.json');
 const TOKEN = config.token;
-const BOTNAME = "iou bot";
+const BOTNAME = "IOU Bot 2.0";
 const PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -75,7 +75,7 @@ bot.on("message", function(message) {
         
             var stringDate = EST.getDate() + "/" + EST.getMonth() + "/" + EST.getFullYear();
             var stringTime = EST.getHours() + ":" + EST.getMinutes() + ":" + EST.getSeconds();
-            message.author.send(days[EST.getDay()] + " " + stringDate + " " + stringTime + " EST");
+            message.author.send("**Server Time:** " + days[EST.getDay()] + " " + stringDate + " " + stringTime + " (EST)");
             break;    
         //Bot Related Commands
         case "help":
