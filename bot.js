@@ -150,7 +150,7 @@ bot.on("message", function(message) {
             .addField("Event Commands", eventCommands, true)
             .addField("Useful Links", usefulLinks, true)
             .addField("Custom Commands", customP, true)
-            .setFooter("Fun Commands " + funCommands)
+            //.setFooter("Fun Commands " + funCommands)
             .setColor(0x9B59B6)
             message.author.send(embed);
             break;
@@ -411,7 +411,7 @@ bot.on("message", function(message) {
             
         //fun
         case "cat":
-            if (message.channel.id != "211679243304828929") {
+            if (message.channel.id != "disabled@@") {
                 return;
             }
             Promise.all([httpRequest("http", "random.cat", "/meow")]).then(values => { 
@@ -420,7 +420,7 @@ bot.on("message", function(message) {
             });
             break; 
         case "dog":
-            if (message.channel.id != "211679243304828929") {
+            if (message.channel.id != "disabled@@") {
                 return;
             }
             Promise.all([httpRequest("https", "dog.ceo", "/api/breeds/image/random")]).then(values => { 
@@ -429,7 +429,7 @@ bot.on("message", function(message) {
             });
             break;
         case "flip":
-            if (message.channel.id != "211679243304828929") {
+            if (message.channel.id != "disabled@@") {
                 return;
             }
             var toss = (Math.floor(Math.random() * 2) == 0);
@@ -441,7 +441,7 @@ bot.on("message", function(message) {
             }
             break;
         case "8ball":
-            if (message.channel.id != "211679243304828929") {
+            if (message.channel.id != "disabled@@") {
                 return;
             }
             Promise.all([httpRequest("https", "8ball.delegator.com", "/magic/JSON/abc")]).then(values => { 
