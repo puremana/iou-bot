@@ -10,6 +10,7 @@ const BOTNAME = "IOU Bot 2.0";
 const PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var boolFunCommands = false;
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
@@ -104,7 +105,6 @@ bot.on("message", function(message) {
             for (c in customCommands) {
                 customP = customP + PREFIX + c + "\n";
             }
-
             var botRelated = PREFIX + "help \n" + 
             PREFIX + "info \n" +
             PREFIX + "suggest \n" +
@@ -149,17 +149,24 @@ bot.on("message", function(message) {
             .addField("Party/Guild Commands", partyGuild)
             .addField("Event Commands", eventCommands, true)
             .addField("Useful Links", usefulLinks, true)
-            .addField("Custom Commands", customP, true)
-            //.setFooter("Fun Commands " + funCommands)
             .setColor(0x9B59B6)
+            if (customP == "") {
+                embed.addField("Custom Commands", "There are no custom commands to display.", true)
+            }
+            else {
+                embed.addField("Custom Commands", customP, true)
+            }
+            if (boolFunCommands) {
+                embed.setFooter("Fun Commands " + funCommands)
+            }
             message.author.send(embed);
             break;
         case "info":
             var embed = new Discord.RichEmbed()
-                .addField(BOTNAME, BOTNAME + BOTDESC)
-                .setColor(0x9B59B6)
-                .setFooter("Source code: https://github.com/puremana/iou-bot")
-                .setThumbnail(bot.user.avatarURL)
+            .addField(BOTNAME, BOTNAME + BOTDESC)
+            .setColor(0x9B59B6)
+            .setFooter("Source code: https://github.com/puremana/iou-bot")
+            .setThumbnail(bot.user.avatarURL)
             message.channel.send(embed);
             break;
         case "suggest":
@@ -411,7 +418,7 @@ bot.on("message", function(message) {
             
         //fun
         case "cat":
-            if (message.channel.id != "disabled@@") {
+            if ((message.channel.id != "channelID") || (boolFunCommands == false)) {
                 return;
             }
             Promise.all([httpRequest("http", "random.cat", "/meow")]).then(values => { 
@@ -420,7 +427,7 @@ bot.on("message", function(message) {
             });
             break; 
         case "dog":
-            if (message.channel.id != "disabled@@") {
+            if ((message.channel.id != "channelID") || (boolFunCommands == false)) {
                 return;
             }
             Promise.all([httpRequest("https", "dog.ceo", "/api/breeds/image/random")]).then(values => { 
@@ -429,7 +436,7 @@ bot.on("message", function(message) {
             });
             break;
         case "flip":
-            if (message.channel.id != "disabled@@") {
+            if ((message.channel.id != "channelID") || (boolFunCommands == false)) {
                 return;
             }
             var toss = (Math.floor(Math.random() * 2) == 0);
@@ -441,7 +448,7 @@ bot.on("message", function(message) {
             }
             break;
         case "8ball":
-            if (message.channel.id != "disabled@@") {
+            if ((message.channel.id != "channelID") || (boolFunCommands == false)) {
                 return;
             }
             Promise.all([httpRequest("https", "8ball.delegator.com", "/magic/JSON/abc")]).then(values => { 
