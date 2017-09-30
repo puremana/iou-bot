@@ -11,6 +11,7 @@ const PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
+const TIMEOUT = 1500;
 
 bot.on("ready", function() {
 	console.log("Bot ready...")
@@ -315,11 +316,10 @@ bot.on("message", function(message) {
                 var guildName = args[1];
                 var desc = desc.substr(desc.indexOf(" ") + 1);
             }
-            message.channel.send(guildName + " " + desc);
             var gJson = ["normal", current, message.author.username, guildName, desc];
             guilds[message.author.id] = gJson;
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
-            message.channel.send("Guild " + guildName + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
+            message.channel.send("Guild *" + guildName + "* added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
             break;
         case "addguildformat":
             if (message.author == null) {
@@ -338,7 +338,6 @@ bot.on("message", function(message) {
             var date = new Date();
             var current = date.toString();
             var gJson = ["format", current, message.author.username, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
-            //message.channel.send(gJson.toString());
             guilds[message.author.id] = gJson;
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             message.channel.send("Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
@@ -463,6 +462,10 @@ bot.on("message", function(message) {
             return;
         default:
             message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
+    }
+    
+    if (message.channel.type != "dm") {
+        message.delete(TIMEOUT);
     }
 });
        
