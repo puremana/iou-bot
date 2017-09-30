@@ -39,17 +39,17 @@ bot.on("message", function(message) {
     switch (args[0].toLowerCase()) {
         //Challenge Commands
         case "bronze":
-            if (message.channel.id == "146030310767722496") {
+            if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
                 message.channel.send("http://i.imgur.com/POra9Kx.jpg");
             }
             break;
         case "silver":
-            if (message.channel.id == "146030310767722496") {
+            if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
                 message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
             }
             break;
         case "gold":
-            if (message.channel.id == "146030310767722496") {
+            if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
                 message.channel.send("http://i.imgur.com/5GXghiA.jpg");
             }
             break;
@@ -72,7 +72,7 @@ bot.on("message", function(message) {
             var offset = -5.0
             var date = new Date();
             var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-            var EST = new Date(utc + (3600000*offset));
+            var EST = new Date(utc + (3600000 * offset));
         
             var stringDate = EST.getDate() + "/" + EST.getMonth() + "/" + EST.getFullYear();
             var stringTime = EST.getHours() + ":" + EST.getMinutes() + ":" + EST.getSeconds();
@@ -80,27 +80,30 @@ bot.on("message", function(message) {
             break;    
         //Bot Related Commands
         case "help":
-            if (message.member == null) {
-                message.channel.send("Message author is undefined.");
-                return;
-            }
             var showingRoles = "";
             var additionalBot = "";
             var additionalParty = "";
             var additionalGuild = "";
-            if (message.member.roles.find("name", "IOU Team")) {
-                showingRoles = "IOU Team";
-                additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
-                PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
-                additionalParty = PREFIX + "resetparties *(IOU Team only)* \n";
-                additionalGuild = PREFIX + "resetguilds *(IOU Team only)* \n";
-            }
-            else if (message.member.roles.find("name", "Spun & Spud")) {
-                showingRoles = "Spun & Spud";
+
+            if (message.member != null) {
+                if (message.member.roles.find("name", "IOU Team")) {
+                    showingRoles = "IOU Team";
+                    additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
+                    PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
+                    additionalParty = PREFIX + "resetparties *(IOU Team only)* \n";
+                    additionalGuild = PREFIX + "resetguilds *(IOU Team only)* \n";
+                }
+                else if (message.member.roles.find("name", "Spun & Spud")) {
+                    showingRoles = "Spun & Spud";
+                }
+                else {
+                    showingRoles = "Member";
+                }
             }
             else {
                 showingRoles = "Member";
             }
+
             var customP = "";
             for (c in customCommands) {
                 customP = customP + PREFIX + c + "\n";
@@ -143,7 +146,7 @@ bot.on("message", function(message) {
             PREFIX + "8ball ";
 
             var embed = new Discord.RichEmbed()
-            .setAuthor("Showing commands for - " + showingRoles, message.member.user.avatarURL)
+            .setAuthor("Showing commands for - " + showingRoles, message.author.avatarURL)
             .addField("Bot Related Commands", botRelated, true)
             .addField("Challenge Commands", challengeCommands, true)
             .addField("Party/Guild Commands", partyGuild)
@@ -224,7 +227,7 @@ bot.on("message", function(message) {
         
         //Parties - Guilds    
         case "addparty":
-            if (message.member == null) {
+            if (message.author == null) {
                 message.channel.send("Message author is undefined.");
                 return;
             }
@@ -239,25 +242,25 @@ bot.on("message", function(message) {
                 desc = desc + args[i] + " ";
             }
             //make it an array :]
-            var pJson = [current, message.member.displayName, args[1], desc];
-            parties[message.member.id] = pJson;
+            var pJson = [current, message.author.username, args[1], desc];
+            parties[message.author.id] = pJson;
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
             message.channel.send("Party added. Type **" + PREFIX + "parties** to get sent a list of current available parties");
             break;
         case "removeparty":
-            if (message.member == null) {
+            if (message.author == null) {
                 message.channel.send("Message author is undefined.");
                 return;
             }
             for (p in parties) {
-                if (message.member.id == p) {
+                if (message.author.id == p) {
                     delete parties[p];
                     fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
                     message.channel.send("Party removed.");
                     return;
                 }
             }
-            message.channel.send("Couldn't find party for " + message.member.displayName);
+            message.channel.send("Couldn't find party for " + message.author.username);
             break;
         case "resetparties":
             if (message.member == null) {
@@ -285,7 +288,7 @@ bot.on("message", function(message) {
             break;
 
         case "addguild":
-            if (message.member == null) {
+            if (message.author == null) {
                 message.channel.send("Message author is undefined.");
                 return;
             }    
@@ -313,13 +316,13 @@ bot.on("message", function(message) {
                 var desc = desc.substr(desc.indexOf(" ") + 1);
             }
             message.channel.send(guildName + " " + desc);
-            var gJson = ["normal", current, message.member.displayName, guildName, desc];
-            guilds[message.member.id] = gJson;
+            var gJson = ["normal", current, message.author.username, guildName, desc];
+            guilds[message.author.id] = gJson;
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             message.channel.send("Guild " + guildName + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
             break;
         case "addguildformat":
-            if (message.member == null) {
+            if (message.author == null) {
                 message.channel.send("Message author is undefined.");
                 return;
             }
@@ -334,9 +337,9 @@ bot.on("message", function(message) {
             }
             var date = new Date();
             var current = date.toString();
-            var gJson = ["format", current, message.member.displayName, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
+            var gJson = ["format", current, message.author.username, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
             //message.channel.send(gJson.toString());
-            guilds[message.member.id] = gJson;
+            guilds[message.author.id] = gJson;
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             message.channel.send("Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
             break;
@@ -355,12 +358,12 @@ bot.on("message", function(message) {
             }
             break;
         case "removeguild":
-            if (message.member == null) {
+            if (message.author == null) {
                 message.channel.send("Message author is undefined.");
                 return;
             }
             for (g in guilds) {
-                if (message.member.id == g) {
+                if (message.author.id == g) {
                     var guildName = guilds[g][3];
                     delete guilds[g];
                     fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
@@ -368,7 +371,7 @@ bot.on("message", function(message) {
                     return;
                 }
             }
-            message.channel.send("Couldn't find party for " + message.member.displayName);
+            message.channel.send("Couldn't find party for " + message.author.username);
             break;
         case "guilds":
             for (g in guilds) {
