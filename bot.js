@@ -35,13 +35,6 @@ bot.on("message", function(message) {
     }
 
     var args = message.content.substring(PREFIX.length).split(" ");
-    
-    for (c in customCommands) {
-        if (args[0].toLowerCase() == c) {
-            message.channel.send(customCommands[c]);
-            return;
-        }
-    }
 
     //Hashmap stuff
     if (hashArray.indexOf(args[0].toLowerCase()) > -1) {
@@ -53,9 +46,21 @@ bot.on("message", function(message) {
         }
     }
     else {
+        for (c in customCommands) {
+            if (args[0].toLowerCase() == c) {
+                message.channel.send(customCommands[c]);
+                deleteMessage(message);
+                return;
+            }
+        }
         message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
     }
+    deleteMessage(message);
+});
+       
+bot.login(TOKEN);
 
+var deleteMessage = function(message) {
     if (message.channel.type != "dm") {
         try {
             message.delete(TIMEOUT);
@@ -64,6 +69,4 @@ bot.on("message", function(message) {
             console.log(err)
         }
     }
-});
-       
-bot.login(TOKEN);
+}
