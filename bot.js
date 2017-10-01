@@ -1,22 +1,14 @@
 console.log("Bot loading...");
 const Discord = require("discord.js");
 var bot = new Discord.Client();
-var fs = require("fs");
 var config = require('./storage/config.json');
 var customCommands = require('./storage/custom.json');
-var parties = require('./storage/parties.json');
-var guilds = require('./storage/guilds.json');
 var commands = require('./commands.js')
-const TOKEN = config.token;
-const BOTNAME = "IOU Bot 2.0";
 const PREFIX = "?";
-const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
-var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-var boolFunCommands = false;
+const TOKEN = config.token;
 const TIMEOUT = 1500;
 
-//Load Bot
-//loop through functions in commands and add to hashmap
+//Load Bot - loop through functions in commands and add to hashmap
 var hashArray = [];
 for (com in commands.functions) {
     hashArray.push(com);
