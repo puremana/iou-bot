@@ -269,7 +269,7 @@ exports.functions = {
             message.author.send(embed);
         }
     },
-    addguild: function() {
+    addguild: function(message) {
         if (message.author == null) {
             message.channel.send("Message author is undefined.");
             return;
