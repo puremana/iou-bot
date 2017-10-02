@@ -46,12 +46,10 @@ bot.on("message", function(message) {
         }
     }
     else {
-        for (c in customCommands) {
-            if (args[0].toLowerCase() == c) {
-                message.channel.send(customCommands[c]);
-                deleteMessage(message);
-                return;
-            }
+        if (customCommands.hasOwnProperty(args[0].toLowerCase())) {
+            message.channel.send(customCommands[args[0].toLowerCase()]);
+            deleteMessage(message);
+            return;
         }
         message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
     }
