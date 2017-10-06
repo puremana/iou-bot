@@ -1,3 +1,5 @@
+![Alt text](https://imgur.com/a/RiBrE "Help Command Screenshot")
+
 **How to set up the bot**
 1) Clone the repo from https://github.com/puremana/iou-bot
 2) Go to https://discordapp.com/developers/applications/me
