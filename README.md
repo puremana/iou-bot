@@ -1,4 +1,5 @@
-![Alt text](https://imgur.com/a/RiBrE "Help Command Screenshot")
+**Help Command Screenshot**
+![alt text](https://i.imgur.com/pjBJ1C9.png)
 
 **How to set up the bot**
 1) Clone the repo from https://github.com/puremana/iou-bot
