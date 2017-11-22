@@ -7,6 +7,7 @@ var commands = require('./commands.js')
 const PREFIX = "?";
 const TOKEN = config.token;
 const TIMEOUT = 1500;
+const questionRegex = /^[?]+$/;
 
 //Load Bot - loop through functions in commands and add to hashmap
 var hashArray = [];
@@ -31,6 +32,10 @@ bot.on("message", function(message) {
     }
 
     if (!message.content.startsWith(PREFIX)) {
+        return;
+    }
+
+    if (questionRegex.test(message.content)) {
         return;
     }
 
