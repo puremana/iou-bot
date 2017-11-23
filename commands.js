@@ -3,6 +3,7 @@ var fs = require("fs");
 var customCommands = require('./storage/custom.json');
 var parties = require('./storage/parties.json');
 var guilds = require('./storage/guilds.json');
+var votes = require('./storage/votes.json')
 const BOTNAME = "IOU Bot 2.0";
 var PREFIX = "?";
 const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREFIX + "help** to get DMed the current list of commands \n" + "Type **" + PREFIX + "suggest** to get a link to suggestions";
@@ -378,6 +379,44 @@ exports.functions = {
             message.author.send(embed);
         }
     },
+
+    //Voting
+    votenew: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //if there isn't a vote of this name
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                message.channel.send("There is already a poll with the name **" + rawSplit[1] + "**. Please `?voteclose` it before recreating.");
+                return;
+            }
+        }
+        //create a new poll with those options
+        var voteOptions = [];
+        for (i = 3; i < rawSplit.length; i++) {
+            if (rawSplit[i] != " ") {
+                voteOptions.push(rawSplit[i]);
+                voteOptions.push([]);
+            }
+        }
+        var vJson = [message.author.id, voteOptions];
+        votes[rawSplit[1]] = vJson;
+        fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
+        //display the new poll
+
+    },
+    vote: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+    },
+
 
     //Useful Links
     guide: function(message) {
