@@ -388,7 +388,7 @@ exports.functions = {
         }
         var args = message.content.substring(PREFIX.length).split(" ");
         var rawSplit = message.content.split("\"");
-        //if there isn't a vote of this name
+        //if there is already a poll with this name
         for (v in votes) {
             if (v == rawSplit[1]) {
                 message.channel.send("There is already a poll with the name **" + rawSplit[1] + "**. Please `?voteclose` it before recreating.");
@@ -397,17 +397,17 @@ exports.functions = {
         }
         //create a new poll with those options
         var voteOptions = [];
-        for (i = 3; i < rawSplit.length; i++) {
+        for (i = 5; i < (rawSplit.length - 1); i++) {
             if (rawSplit[i] != " ") {
                 voteOptions.push(rawSplit[i]);
                 voteOptions.push([]);
             }
         }
-        var vJson = [message.author.id, voteOptions];
+        var vJson = [message.author.id, rawSplit[3], voteOptions];
         votes[rawSplit[1]] = vJson;
         fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
         //display the new poll
-
+        displayPoll(message, rawSplit[1]);
     },
     vote: function(message) {
         if (message.member == null) {
@@ -504,4 +504,14 @@ var httpRequest = function (type, url, ranHost) {
         });
         request.end();
     });
-  };
+};
+var displayPoll = function(message, nameOfPoll) {
+    var poll = votes[nameOfPoll][2];
+    var textMessage = "**Poll - " + nameOfPoll + "**\n\n";
+    var num = 1; 
+    for (i = 0; i < poll.length; i = i + 2) {
+        textMessage = textMessage + "`[" + num + "] " + poll[i] + ": " + poll[i + 1].length + "`\n";
+        num++;
+    }
+    message.channel.send(textMessage);
+}
