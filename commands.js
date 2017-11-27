@@ -67,7 +67,7 @@ exports.functions = {
         var additionalGuild = "";
     
         if (message.member != null) {
-            if (message.member.roles.find("name", "IOU Team")) {
+            if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
                 showingRoles = "IOU Team";
                 additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
                 PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
@@ -162,7 +162,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.find("name", "IOU Team")) {
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
             if (args.length < 3) {
                 message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
                 return;
@@ -186,7 +186,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.find("name", "IOU Team")) {
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
             if (args.length == 2) {
                 for (c in customCommands) {
                     if (args[1].toLowerCase() == c) {
@@ -251,7 +251,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team")) {
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
             parties = {};
             parties["id"] = ['time','name','required dps','description'];
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
@@ -331,7 +331,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team")) {
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
             guilds = {};
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             message.channel.send("All guilds have been reset.");
