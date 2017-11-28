@@ -246,6 +246,27 @@ exports.functions = {
         }
         message.channel.send("Couldn't find party for " + message.author.username);
     },
+    removepartyname: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+            var name = message.content.substring(PREFIX.length + "removepartyname".length + 1);
+            for (party in parties) {
+                if (parties[party][1] == name) {
+                    delete parties[party];
+                    fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
+                    message.channel.send(name + "'s party has been deleted.");
+                    return;
+                }
+            }
+            message.channel.send("Please enter a valid name to delete.");
+        }
+        else {
+            message.channel.send("You do not have the IOU Team role.");
+        }
+    },
     resetparties: function(message) {
         if (message.member == null) {
             message.channel.send("Message author is undefined.");
