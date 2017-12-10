@@ -232,6 +232,27 @@ exports.functions = {
             message.channel.send("You do not have the IOU Team role.");
         }
     },
+    echo: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+            var text = message.content.substring(PREFIX.length + 5);
+            message.channel.send(text);
+            if (message.channel.type != "dm") {
+                try {
+                    message.delete(0);
+                    throw err
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        }
+        else {
+            message.channel.send("You do not have the IOU Team role.");
+        }
+    },
 
     //Parties - Guilds    
     addparty: function(message) {
