@@ -207,6 +207,31 @@ exports.functions = {
             message.channel.send("You do not have the IOU Team role.");
         }
     },
+    rules: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+            var args = message.content.substring(PREFIX.length).split(" ");
+            var user = bot.users.find("id", args[1]);
+            var rules = "**1)**    No spamming or flooding the chat with messages outside of #spam. \n" +
+            "**2)**    Keep heated arguments inside #jerry-springer. \n" + 
+            "**3)**    No adult (18+), explicit, or controversial messages. \n" +
+            "**4)**    Keep to relevant channel topic. \n" + 
+            "**5)**    No advertising other games. \n" + 
+            "**6)**    Be respectful of others within reason (this includes the IOU Team).";
+
+            var embed = new Discord.RichEmbed()
+            .addField("Rules for the IOURPG Discord", rules)
+            .setColor(0xF33900)
+            .setFooter("Rules sent from " + message.author.username);
+            message.author.send(embed);
+        }
+        else {
+            message.channel.send("You do not have the IOU Team role.");
+        }
+    },
 
     //Parties - Guilds    
     addparty: function(message) {
@@ -436,6 +461,27 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                //check how many votes you can do
+                var numVotes = votes[v][1];
+                //check if this user has voted before x number of times
+                var poll = votes[v][2];
+                var count = 0;
+                for (i = 0; i < poll.length; i = i + 2) {
+                    
+                }
+                if (numVotes == count) {
+                    message.channel.send("already voted");
+                    return;
+                }
+                //if they haven't put there vote or votes in 
+
+                return;
+            }
+        }
     },
 
 
