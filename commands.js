@@ -153,6 +153,38 @@ exports.functions = {
         .setThumbnail(bot.user.avatarURL)
         message.channel.send(embed);
     },
+    serverinfo: function(message) {
+        if (message.channel.type == "dm") {
+            return;
+        }
+        var botCount = 0;
+        var totalMembers = message.guild.memberCount;
+        var activeMembers = totalMembers;
+        console.log(totalMembers);   
+        //loop through members
+        for (u in message.guild.members.array()) {
+            if (message.guild.members.array()[u].user.bot == true) {
+                botCount++;
+            }
+            if (message.guild.members.array()[u].presence.status == "offline") {
+                activeMembers--;
+            }
+        }
+        console.log(activeMembers);
+        var embed = new Discord.RichEmbed()
+        .setAuthor(BOTNAME, bot.user.avatarURL)
+        .setTitle("Server Info - " + message.guild.name)
+        .setColor(0x9B59B6)
+        .setThumbnail(message.guild.iconURL)
+        .addField("Bots", botCount, true)
+        .addField("Owner", message.guild.owner, true)
+        .addField("Active Members", activeMembers, true)
+        .addField("Region", message.guild.region, true)
+        .addField("Total Members", totalMembers, true)
+        .addField("Invite Link", "https://discord.gg/WfcvtZm", true)
+        .setFooter("Server creation - " + message.guild.createdAt, message.guild.owner.user.avatarURL)
+        message.channel.send(embed);
+    },
     suggest: function(message) {
         message.channel.send("Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
     },
@@ -226,7 +258,7 @@ exports.functions = {
             .addField("Rules for the IOURPG Discord", rules)
             .setColor(0xF33900)
             .setFooter("Rules sent from " + message.author.username);
-            message.author.send(embed);
+            user.send(embed);
         }
         else {
             message.channel.send("You do not have the IOU Team role.");
@@ -470,7 +502,10 @@ exports.functions = {
                 voteOptions.push([]);
             }
         }
-        var vJson = [message.author.id, rawSplit[3], voteOptions];
+        var author = {"author" : message.author.id};
+        var numOptions = {"numOptions" : rawSplit[3]};
+        var options = {"voteOptions" : voteOptions};
+        var vJson = [author, numOptions, options];
         votes[rawSplit[1]] = vJson;
         fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
         //display the new poll
@@ -487,9 +522,9 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check how many votes you can do
-                var numVotes = votes[v][1];
+                var numVotes = votes[v]["numOptions"];
                 //check if this user has voted before x number of times
-                var poll = votes[v][2];
+                var poll = votes[v]["options"];
                 var count = 0;
                 for (i = 0; i < poll.length; i = i + 2) {
                     
@@ -498,7 +533,7 @@ exports.functions = {
                     message.channel.send("already voted");
                     return;
                 }
-                //if they haven't put there vote or votes in 
+                //if they haven't put their vote or votes in 
 
                 return;
             }

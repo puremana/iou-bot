@@ -27,7 +27,7 @@ bot.on("message", function(message) {
 		return;
     }
     
-    if (message.content.includes("bot")) {
+    if (message.content.includes("bot" || "Bot")) {
         message.react("\uD83D\uDC40");
     }
 
