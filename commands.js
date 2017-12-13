@@ -494,6 +494,11 @@ exports.functions = {
                 return;
             }
         }
+        //if the poll options isn't an int
+        if (isNaN(rawSplit[3])) {
+            message.channel.send("Please make sure the second argument (number of votes) is a number before creating the poll.");
+            return;
+        }
         //create a new poll with those options
         var voteOptions = [];
         for (i = 5; i < (rawSplit.length - 1); i++) {
@@ -502,11 +507,7 @@ exports.functions = {
                 voteOptions.push([]);
             }
         }
-        var author = {"author" : message.author.id};
-        var numOptions = {"numOptions" : rawSplit[3]};
-        var options = {"voteOptions" : voteOptions};
-        var vJson = [author, numOptions, options];
-        votes[rawSplit[1]] = vJson;
+        votes[rawSplit[1]] = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions};
         fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
         //display the new poll
         displayPoll(message, rawSplit[1]);
@@ -524,17 +525,34 @@ exports.functions = {
                 //check how many votes you can do
                 var numVotes = votes[v]["numOptions"];
                 //check if this user has voted before x number of times
-                var poll = votes[v]["options"];
+                var poll = votes[v]["voteOptions"];
                 var count = 0;
                 for (i = 0; i < poll.length; i = i + 2) {
-                    
+                    for (j = 0; j < poll[i].length; j++) {
+                        if (poll[i][j] == message.author.id) {
+                            count++;
+                        }
+                    }
                 }
-                if (numVotes == count) {
-                    message.channel.send("already voted");
+                if (numVotes <= count) {
+                    message.channel.send('Already voted, please use `?votereset "poll name"` before trying again.');
+                    return;
+                }
+                //check number of votes they are doing is less than what's in there
+                var messageVotes = (rawSplit.count - 2) / 2;
+                if ((messageVotes + count) > numVotes) {
+                    message.channel.send('Trying to enter too many votes, please use `?votereset "poll name"` before trying again.');
                     return;
                 }
                 //if they haven't put their vote or votes in 
-
+                //if poll vote is not real
+                for (var l = 3; l < rawSplit.length; i++) {
+                    if (parseInt(rawSplit[l]) > poll.length) {
+                        message.channel.send('One or more of your votes are not in the poll. Please try again.');
+                        return;
+                    }
+                }
+                
                 return;
             }
         }
@@ -629,7 +647,7 @@ var httpRequest = function (type, url, ranHost) {
     });
 };
 var displayPoll = function(message, nameOfPoll) {
-    var poll = votes[nameOfPoll][2];
+    var poll = votes[nameOfPoll]["voteOptions"];
     var textMessage = "**Poll - " + nameOfPoll + "**\n\n";
     var num = 1; 
     for (i = 0; i < poll.length; i = i + 2) {

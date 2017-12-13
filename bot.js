@@ -27,7 +27,7 @@ bot.on("message", function(message) {
 		return;
     }
     
-    if (message.content.includes("bot" || "Bot")) {
+    if (message.content.toLocaleLowerCase().includes("bot")) {
         message.react("\uD83D\uDC40");
     }
 
