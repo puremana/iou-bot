@@ -118,7 +118,8 @@ exports.functions = {
         PREFIX + 'votedisplay - `' + PREFIX + 'votedisplay "Name of Poll"` \n' +
         PREFIX + 'voteclose - `' + PREFIX + 'voteclose "Name of Poll"` \n' +
         PREFIX + 'voteopen - `' + PREFIX + 'voteopen "Name of Poll"` \n' +
-        PREFIX + 'votedelete - `' + PREFIX + 'votedelete "Name of Poll"`';
+        PREFIX + 'votedelete - `' + PREFIX + 'votedelete "Name of Poll"` \n' +
+        PREFIX + 'votereset - `' + PREFIX + 'votereset "Name of Poll"` \n';
 
         var eventCommands = PREFIX + "invasion \n" + 
         PREFIX + "energyevent \n" + 
@@ -736,6 +737,29 @@ exports.functions = {
                     message.channel.send("You do not have permissions to close this poll.");
                     return;
                 }
+            }
+        }
+    },
+    votereset: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) { 
+                var poll = votes[v]["voteOptions"];
+                //loop through and remove
+                for (i = 1; i < poll.length; i = i + 2) {
+                    var index = poll[i].indexOf(message.author.id);
+                    if (index != -1) {
+                        poll[i].splice(index, 1);
+                    }
+                }
+                message.channel.send("Your responses for poll **" + rawSplit[1] + "** have been reset.");
+                fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
             }
         }
     },
