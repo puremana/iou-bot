@@ -661,6 +661,62 @@ exports.functions = {
                     //close poll
                     votes[v]["closed"] = true;
                     message.channel.send("Poll **" + rawSplit[1] + "** is now closed.");
+                    fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
+                    return;
+                }
+                else {
+                    message.channel.send("You do not have permissions to close this poll.");
+                    return;
+                }
+            }
+        }
+    },
+    voteopen: function (message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                //check they have permissions to close poll
+                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                    //check the poll isn't open
+                    if (votes[v]["closed"] == false) {
+                        message.channel.send("This poll is already open.");
+                        return;
+                    }
+                    //open poll
+                    votes[v]["closed"] = false;
+                    message.channel.send("Poll **" + rawSplit[1] + "** has been reopened.");
+                    fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
+                    return;
+                }
+                else {
+                    message.channel.send("You do not have permissions to open this poll.");
+                    return;
+                }
+            }
+        }
+    },
+    votedelete: function (message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                //check they have permissions to delete
+                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                    //delete poll
+                    delete votes[v];
+                    message.channel.send("Poll **" + rawSplit[1] + "** is now deleted.");
+                    fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                     return;
                 }
                 else {
