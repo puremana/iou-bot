@@ -507,7 +507,7 @@ exports.functions = {
                 voteOptions.push([]);
             }
         }
-        votes[rawSplit[1]] = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions};
+        votes[rawSplit[1]] = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions, "closed" : false};
         fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
         //display the new poll
         displayPoll(message, rawSplit[1]);
@@ -536,6 +536,11 @@ exports.functions = {
                 }
                 if (numVotes <= count) {
                     message.channel.send('Already voted, please use `?votereset "poll name"` before trying again.');
+                    return;
+                }
+                //check the poll isn't closed already
+                if (votes[v]["closed"] == true) {
+                    message.channel.send('This poll has been closed.');
                     return;
                 }
                 //check number of votes they are doing is less than what's in there
@@ -636,6 +641,35 @@ exports.functions = {
         message.channel.send("Couldn't find poll name " + rawSplit[1]);
         return;
     },
+    voteclose: function (message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                //check they have permissions to close poll
+                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                    //check the poll isn't already closed
+                    if (votes[v]["closed"] == true) {
+                        message.channel.send("This poll has already been closed.");
+                        return;
+                    }
+                    //close poll
+                    votes[v]["closed"] = true;
+                    message.channel.send("Poll **" + rawSplit[1] + "** is now closed.");
+                    return;
+                }
+                else {
+                    message.channel.send("You do not have permissions to close this poll.");
+                    return;
+                }
+            }
+        }
+    },
 
     //Useful Links
     guide: function(message) {
@@ -725,9 +759,13 @@ var httpRequest = function (type, url, ranHost) {
     });
 };
 var displayPoll = function(message, nameOfPoll) {
-    var poll = votes[nameOfPoll]["voteOptions"];
-    var textMessage = "**Poll - " + nameOfPoll + "**\n\n";
-    var num = 1; 
+    var poll = votes[nameOfPoll]["voteOptions"]; 
+    var num = 1;
+    var isClosed = "Open";
+    if (votes[nameOfPoll]["closed"] == true) {
+        isClosed = "Closed";
+    }
+    var textMessage = "**Poll - " + nameOfPoll + "** [" + isClosed + "]\n\n";
     for (i = 0; i < poll.length; i = i + 2) {
         textMessage = textMessage + "`[" + num + "] " + poll[i] + ": " + poll[i + 1].length + "`\n";
         num++;
