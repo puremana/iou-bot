@@ -527,7 +527,7 @@ exports.functions = {
                 //check if this user has voted before x number of times
                 var poll = votes[v]["voteOptions"];
                 var count = 0;
-                for (i = 0; i < poll.length; i = i + 2) {
+                for (i = 1; i < poll.length; i = i + 2) {
                     for (j = 0; j < poll[i].length; j++) {
                         if (poll[i][j] == message.author.id) {
                             count++;
@@ -546,13 +546,42 @@ exports.functions = {
                 }
                 //if they haven't put their vote or votes in 
                 //if poll vote is not real
-                for (var l = 3; l < rawSplit.length; i++) {
-                    if (parseInt(rawSplit[l]) > poll.length) {
+                var theVotes = [];
+                for (var l = 3; l < rawSplit.length; l = l + 2) {
+                    if (isNaN(rawSplit[l])) {
+                        message.channel.send('Use digits to indicate what you are voting for. Please try again.');
+                        return;
+                    }
+                    if (parseInt(rawSplit[l]) > (poll.length / 2)) {
                         message.channel.send('One or more of your votes are not in the poll. Please try again.');
                         return;
                     }
+                    theVotes.push(rawSplit[l]);
                 }
-                
+                //check not voting for same thing twice
+                if ((new Set(theVotes)).size !== theVotes.length) {
+                    message.channel.send('You cannot vote for the same option twice. Please try again.');
+                    return;
+                }
+                //else put their vote in
+                for (var j = 0; j < theVotes.length; j++) {
+                    var num = parseInt(theVotes[j]) + parseInt(theVotes[j] - 1);
+                    for (var o = 0; o < poll[num].length; o++) {
+                        if (poll[num][o] == message.author.id) {
+                            message.channel.send('You cannot vote for the same option twice. Please try again.');
+                            return;
+                        }
+                    }
+                    poll[num].push(message.author.id);
+                }
+                fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
+                if (theVotes.length == 1) {
+                    message.channel.send('Your vote has been registered.');
+                }
+                else {
+                    message.channel.send('Your votes have been registered.');
+                }
+                displayPoll(message, rawSplit[1]);
                 return;
             }
         }
