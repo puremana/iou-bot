@@ -71,8 +71,11 @@ exports.functions = {
                 showingRoles = "IOU Team";
                 additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
                 PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
-                additionalParty = PREFIX + "resetparties *(IOU Team only)* \n";
-                additionalGuild = PREFIX + "resetguilds *(IOU Team only)* \n";
+                additionalBot = additionalBot + PREFIX + "rules *(IOU Team only)* \n";
+                additionalBot = additionalBot + PREFIX + "echo *(IOU Team only)* \n";
+                additionalParty = additionalParty + PREFIX + "resetparties *(IOU Team only)* \n";
+                additionalGuild = additionalParty + PREFIX + "resetguilds *(IOU Team only)* \n";
+                additionalGuild = additionalParty + PREFIX + "removepartyname *(IOU Team only)* \n";
             }
             else if (message.member.roles.find("name", "Spun & Spud")) {
                 showingRoles = "Spun & Spud";
@@ -92,6 +95,7 @@ exports.functions = {
         var botRelated = PREFIX + "help \n" + 
         PREFIX + "info \n" +
         PREFIX + "suggest \n" +
+        PREFIX + "serverinfo \n" +
         additionalBot;
     
         var challengeCommands = PREFIX + "bronze \n" +
@@ -107,7 +111,15 @@ exports.functions = {
         PREFIX + "removeguild \n" +
         PREFIX + "guilds \n" +
         additionalGuild;
-    
+
+        var votingCommands = PREFIX + 'votenew - `' + PREFIX + 'votenew "Name of Poll" "# of times you can vote" "Option One" "Option Two" "Etc"` \n' +
+        PREFIX + 'vote - `' + PREFIX + 'vote "Name of Poll" "index of option (eg 1)"` \n' +
+        PREFIX + 'votecheck - `' + PREFIX + 'votecheck "Name of Poll"` \n' +
+        PREFIX + 'votedisplay - `' + PREFIX + 'votedisplay "Name of Poll"` \n' +
+        PREFIX + 'voteclose - `' + PREFIX + 'voteclose "Name of Poll"` \n' +
+        PREFIX + 'voteopen - `' + PREFIX + 'voteopen "Name of Poll"` \n' +
+        PREFIX + 'votedelete - `' + PREFIX + 'votedelete "Name of Poll"`';
+
         var eventCommands = PREFIX + "invasion \n" + 
         PREFIX + "energyevent \n" + 
         PREFIX + "rpg \n" + 
@@ -131,6 +143,7 @@ exports.functions = {
         .addField("Bot Related Commands", botRelated, true)
         .addField("Challenge Commands", challengeCommands, true)
         .addField("Party/Guild Commands", partyGuild)
+        .addField("Voting Commands", votingCommands)
         .addField("Event Commands", eventCommands, true)
         .addField("Useful Links", usefulLinks, true)
         .setColor(0x9B59B6)
