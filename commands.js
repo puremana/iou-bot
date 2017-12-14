@@ -619,6 +619,23 @@ exports.functions = {
         message.channel.send("Couldn't find poll name " + rawSplit[1]);
         return;
     },
+    votedisplay: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                displayPoll(message, rawSplit[1]);
+                return;
+            }
+        }
+        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        return;
+    },
 
     //Useful Links
     guide: function(message) {
