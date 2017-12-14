@@ -585,8 +585,40 @@ exports.functions = {
                 return;
             }
         }
+        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        return;
     },
-
+    votecheck: function(message) {
+        if (message.member == null) {
+            message.channel.send("Message author is undefined.");
+            return;
+        }
+        var args = message.content.substring(PREFIX.length).split(" ");
+        var rawSplit = message.content.split("\"");
+        //check if that is a poll
+        for (v in votes) {
+            if (v == rawSplit[1]) {
+                var arrayResult = [];
+                var poll = votes[v]["voteOptions"];
+                for (i = 1; i < poll.length; i = i + 2) {
+                    for (j = 0; j < poll[i].length; j++) {
+                        if (poll[i][j] == message.author.id) {
+                            arrayResult.push((i + 1) / 2);
+                        }
+                    }
+                }
+                if (arrayResult.length > 0) {
+                    message.channel.send("Your current votes in poll **" + rawSplit[1] + "** are options " + arrayResult);
+                }
+                else {
+                    message.channel.send("You haven't voted in this poll yet.");
+                }
+                return;
+            }
+        }
+        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        return;
+    },
 
     //Useful Links
     guide: function(message) {
