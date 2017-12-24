@@ -10,6 +10,7 @@ const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREF
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
 var bot;
+var BINGOCHANNELID = "394292189368287255";
 
 exports.setters = {
     setBot: function(theBot) {
@@ -785,6 +786,23 @@ exports.functions = {
     },
     trello: function(message) {
         message.channel.send("https://trello.com/b/usVhG9Ry/iou-development-board");
+    },
+
+    //bingo
+    bingoadd: function(message) {
+        //check we're in bingo channel
+        if (message.channel.id != BINGOCHANNELID) {
+            return;
+        }
+        //check doesn't already have bingo role
+        if (message.member.roles.find("name", "bingo")) {
+            message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove the bingo it.");
+            return;
+        }
+        //add the role
+        var bingoRole = message.member.guild.roles.find("name", "bingo");
+        message.channel.send("Your bingo role has been added.");
+        message.member.addRole(bingoRole, "Command issued.");
     },
 
     //fun
