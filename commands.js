@@ -796,13 +796,29 @@ exports.functions = {
         }
         //check doesn't already have bingo role
         if (message.member.roles.find("name", "bingo")) {
-            message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove the bingo it.");
+            message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove it.");
             return;
         }
         //add the role
         var bingoRole = message.member.guild.roles.find("name", "bingo");
         message.channel.send("Your bingo role has been added.");
         message.member.addRole(bingoRole, "Command issued.");
+    },
+    bingoremove: function(message) {
+        //check we're in bingo channel
+        if (message.channel.id != BINGOCHANNELID) {
+            return;
+        }
+        //check they have the bingo role
+        if (message.member.roles.find("name", "bingo")) {
+            //remove the role
+            var bingoRole = message.member.guild.roles.find("name", "bingo");
+            message.channel.send("Your bingo role has been removed.");
+            message.member.removeRole(bingoRole, "Command issued.");
+        }
+        else {
+            message.channel.send("You don't have the bingo role. Use `" + PREFIX + "bingoadd` to get it.");
+        }
     },
 
     //fun
