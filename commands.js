@@ -99,6 +99,8 @@ exports.functions = {
         PREFIX + "info \n" +
         PREFIX + "suggest \n" +
         PREFIX + "serverinfo \n" +
+        PREFIX + "bingoadd \n" +
+        PREFIX + "bingoremove \n" +
         additionalBot;
     
         var challengeCommands = PREFIX + "bronze \n" +
