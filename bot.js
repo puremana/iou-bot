@@ -4,10 +4,12 @@ var bot = new Discord.Client();
 var config = require('./storage/config.json');
 var customCommands = require('./storage/custom.json');
 var commands = require('./commands.js')
+var schedule = require('node-schedule-tz');
 const PREFIX = "?";
 const TOKEN = config.token;
 const TIMEOUT = 1500;
 const questionRegex = /^[?]+$/;
+const serverID = "146007387466235905";
 
 //Load Bot - loop through functions in commands and add to hashmap
 var hashArray = [];
@@ -15,6 +17,19 @@ for (com in commands.functions) {
     hashArray.push(com);
 }
 commands.setters["setBot"](bot);
+
+//scheduler for bingo
+var rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [new schedule.Range(6, 7)];
+rule.hour = [1,5,9,13,17,21];
+rule.minute = 50;
+//set to utc
+rule.tz = 'America/Atikokan';
+
+var bingoFunction = schedule.scheduleJob(rule, function(){
+    var bingoRole = bot.guilds.find("id", serverID).roles.find("name", "bingo");
+    bot.guilds.find("id", serverID).channels.find("name", "bingo").send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
+});
 
 bot.on("ready", function() {
 	console.log("Bot ready...");

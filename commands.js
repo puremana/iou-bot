@@ -10,7 +10,7 @@ const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREF
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
 var bot;
-const BINGOCHANNELID = "394292189368287255";
+const BINGOCHANNELID = "395460192420233216";
 const CHALLENGECHANNELID = "146030310767722496";
 
 
