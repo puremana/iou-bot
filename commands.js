@@ -10,7 +10,9 @@ const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREF
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
 var bot;
-var BINGOCHANNELID = "394292189368287255";
+const BINGOCHANNELID = "394292189368287255";
+const CHALLENGECHANNELID = "146030310767722496";
+
 
 exports.setters = {
     setBot: function(theBot) {
@@ -21,17 +23,17 @@ exports.setters = {
 exports.functions = {
     //Challenge Commands
     bronze: function(message) {
-        if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
+        if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
             message.channel.send("http://i.imgur.com/POra9Kx.jpg");
         }
     },
     silver: function(message) {
-        if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
+        if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
             message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
         }
     },
     gold: function(message) {
-        if ((message.channel.id == "146030310767722496") || (message.channel.type == "dm")) {
+        if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
             message.channel.send("http://i.imgur.com/5GXghiA.jpg");
         }
     },
@@ -550,18 +552,18 @@ exports.functions = {
                     }
                 }
                 if (numVotes <= count) {
-                    message.channel.send('Already voted, please use `?votereset "poll name"` before trying again.');
+                    message.channel.send(':negative_squared_cross_mark: Already voted, please use `?votereset "poll name"` before trying again.');
                     return;
                 }
                 //check the poll isn't closed already
                 if (votes[v]["closed"] == true) {
-                    message.channel.send('This poll has been closed.');
+                    message.channel.send(':negative_squared_cross_mark: This poll has been closed.');
                     return;
                 }
                 //check number of votes they are doing is less than what's in there
                 var messageVotes = (rawSplit.count - 2) / 2;
                 if ((messageVotes + count) > numVotes) {
-                    message.channel.send('Trying to enter too many votes, please use `?votereset "poll name"` before trying again.');
+                    message.channel.send(':negative_squared_cross_mark: Trying to enter too many votes, please use `?votereset "poll name"` before trying again.');
                     return;
                 }
                 //if they haven't put their vote or votes in 
@@ -569,18 +571,18 @@ exports.functions = {
                 var theVotes = [];
                 for (var l = 3; l < rawSplit.length; l = l + 2) {
                     if (isNaN(rawSplit[l])) {
-                        message.channel.send('Use digits to indicate what you are voting for. Please try again.');
+                        message.channel.send(':negative_squared_cross_mark: Use digits to indicate what you are voting for. Please try again.');
                         return;
                     }
                     if (parseInt(rawSplit[l]) > (poll.length / 2)) {
-                        message.channel.send('One or more of your votes are not in the poll. Please try again.');
+                        message.channel.send(':negative_squared_cross_mark: One or more of your votes are not in the poll. Please try again.');
                         return;
                     }
                     theVotes.push(rawSplit[l]);
                 }
                 //check not voting for same thing twice
                 if ((new Set(theVotes)).size !== theVotes.length) {
-                    message.channel.send('You cannot vote for the same option twice. Please try again.');
+                    message.channel.send(':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
                     return;
                 }
                 //else put their vote in
@@ -588,7 +590,7 @@ exports.functions = {
                     var num = parseInt(theVotes[j]) + parseInt(theVotes[j] - 1);
                     for (var o = 0; o < poll[num].length; o++) {
                         if (poll[num][o] == message.author.id) {
-                            message.channel.send('You cannot vote for the same option twice. Please try again.');
+                            message.channel.send(':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
                             return;
                         }
                     }
@@ -596,16 +598,16 @@ exports.functions = {
                 }
                 fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                 if (theVotes.length == 1) {
-                    message.channel.send('Your vote has been registered.');
+                    message.channel.send(':white_check_mark: Your vote has been registered.');
                 }
                 else {
-                    message.channel.send('Your votes have been registered.');
+                    message.channel.send(':white_check_mark: Your votes have been registered.');
                 }
                 displayPoll(message, rawSplit[1]);
                 return;
             }
         }
-        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        message.channel.send(":negative_squared_cross_mark: Couldn't find poll name " + rawSplit[1]);
         return;
     },
     votecheck: function(message) {
