@@ -59,7 +59,7 @@ exports.functions = {
         var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
         var EST = new Date(utc + (3600000 * offset));
     
-        var stringDate = EST.getDate() + "/" + EST.getMonth() + "/" + EST.getFullYear();
+        var stringDate = EST.getDate() + "/" + (EST.getMonth() + 1) + "/" + EST.getFullYear();
         var stringTime = EST.getHours() + ":" + EST.getMinutes() + ":" + EST.getSeconds();
         message.author.send("**Server Time:** " + days[EST.getDay()] + " " + stringDate + " " + stringTime + " (EST)");
     }, 
