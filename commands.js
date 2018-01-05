@@ -98,6 +98,7 @@ exports.functions = {
         var botRelated = PREFIX + "help \n" + 
         PREFIX + "info \n" +
         PREFIX + "suggest \n" +
+        PREFIX + "time \n" +
         PREFIX + "serverinfo \n" +
         PREFIX + "bingoadd \n" +
         PREFIX + "bingoremove \n" +
