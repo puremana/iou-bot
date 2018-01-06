@@ -12,6 +12,7 @@ var boolFunCommands = false;
 var bot;
 const BINGOCHANNELID = "395460192420233216";
 const CHALLENGECHANNELID = "146030310767722496";
+const BINGOTIMEOUT = 5000;
 
 
 exports.setters = {
@@ -800,12 +801,16 @@ exports.functions = {
         }
         //check doesn't already have bingo role
         if (message.member.roles.find("name", "bingo")) {
-            message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove it.");
+            message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove it.")
+                .then(m => m.delete(BINGOTIMEOUT))
+                .catch(err => console.log(err));
             return;
         }
         //add the role
         var bingoRole = message.member.guild.roles.find("name", "bingo");
-        message.channel.send("Your bingo role has been added.");
+        message.channel.send("Your bingo role has been added.")
+            .then(m => m.delete(BINGOTIMEOUT))
+            .catch(err => console.log(err));
         message.member.addRole(bingoRole, "Command issued.");
     },
     bingoremove: function(message) {
@@ -817,11 +822,15 @@ exports.functions = {
         if (message.member.roles.find("name", "bingo")) {
             //remove the role
             var bingoRole = message.member.guild.roles.find("name", "bingo");
-            message.channel.send("Your bingo role has been removed.");
+            message.channel.send("Your bingo role has been removed.")
+                .then(m => m.delete(BINGOTIMEOUT))
+                .catch(err => console.log(err));
             message.member.removeRole(bingoRole, "Command issued.");
         }
         else {
-            message.channel.send("You don't have the bingo role. Use `" + PREFIX + "bingoadd` to get it.");
+            message.channel.send("You don't have the bingo role. Use `" + PREFIX + "bingoadd` to get it.")
+                .then(m => m.delete(BINGOTIMEOUT))
+                .catch(err => console.log(err));
         }
     },
 
