@@ -295,7 +295,6 @@ exports.functions = {
             if (message.channel.type != "dm") {
                 try {
                     message.delete(0);
-                    throw err
                 } catch (err) {
                     console.log(err)
                 }

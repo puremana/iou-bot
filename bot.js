@@ -60,7 +60,6 @@ bot.on("message", function(message) {
     if (hashArray.indexOf(args[0].toLowerCase()) > -1) {
         try {
             commands.functions[args[0].toLowerCase()](message);
-            throw err
         } catch (err) {
             console.log(err)
         }
@@ -82,7 +81,6 @@ var deleteMessage = function(message) {
     if (message.channel.type != "dm") {
         try {
             message.delete(TIMEOUT);
-            throw err
         } catch (err) {
             console.log(err)
         }
