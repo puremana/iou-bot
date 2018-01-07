@@ -9,6 +9,7 @@ const PREFIX = "?";
 const TOKEN = config.token;
 const TIMEOUT = 1500;
 const questionRegex = /^[?]+$/;
+const botRegex = /\bbot\b/;
 const serverID = "146007387466235905";
 
 //Load Bot - loop through functions in commands and add to hashmap
@@ -42,7 +43,7 @@ bot.on("message", function(message) {
 		return;
     }
     
-    if (message.content.toLocaleLowerCase().includes("bot")) {
+    if (botRegex.test(message.content.toLowerCase())) {
         message.react("\uD83D\uDC40");
     }
 
