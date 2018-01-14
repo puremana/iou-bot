@@ -21,7 +21,7 @@ commands.setters["setBot"](bot);
 
 //scheduler for bingo
 var rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [new schedule.Range(6, 7)];
+rule.dayOfWeek = [0,6];
 rule.hour = [1,5,9,13,17,21];
 rule.minute = 50;
 //set to utc
