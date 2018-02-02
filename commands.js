@@ -180,18 +180,16 @@ exports.functions = {
         }
         var botCount = 0;
         var totalMembers = message.guild.memberCount;
-        var activeMembers = totalMembers;
-        console.log(totalMembers);   
+        var activeMembers = 0;
         //loop through members
         for (u in message.guild.members.array()) {
             if (message.guild.members.array()[u].user.bot == true) {
                 botCount++;
             }
-            if (message.guild.members.array()[u].presence.status == "offline") {
-                activeMembers--;
+            if (message.guild.members.array()[u].presence.status != "offline") {
+                activeMembers++;
             }
         }
-        console.log(activeMembers);
         var embed = new Discord.RichEmbed()
         .setAuthor(BOTNAME, bot.user.avatarURL)
         .setTitle("Server Info - " + message.guild.name)
