@@ -272,8 +272,9 @@ exports.functions = {
             "**2)**    Keep heated arguments inside #jerry-springer. \n" + 
             "**3)**    No adult (18+), explicit, or controversial messages. \n" +
             "**4)**    Keep to relevant channel topic. \n" + 
-            "**5)**    No advertising other games. \n" + 
-            "**6)**    Be respectful of others within reason (this includes the IOU Team).";
+            "**5)**    No advertising other games or Discord servers without permission. \n" + 
+            "**6)**    Be respectful of others within reason (this includes the IOU Team). \n" +
+            "**7)**    Do not ask for personal information";
 
             var embed = new Discord.RichEmbed()
             .addField("Rules for the IOURPG Discord", rules)
@@ -323,8 +324,20 @@ exports.functions = {
         for (i = 2; i < args.length; i++) {
             desc = desc + args[i] + " ";
         }
+        if (desc.length == 0) {
+            message.channel.send("Description was short to be stored, please try again.");
+            return;
+        }
+        if (desc.length > 244) {
+            message.channel.send("Description was too long to be stored, please try again.");
+            return;
+        }
         //make it an array :]
         var pJson = [current, message.author.username, args[1], desc];
+        if (!verifyJson(pJson)) {
+            message.channel.send("Message could not be saved. Please try again.");
+            return;
+        }
         parties[message.author.id] = pJson;
         fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
         message.channel.send("Party added. Type **" + PREFIX + "parties** to get sent a list of current available parties");
@@ -418,7 +431,15 @@ exports.functions = {
             var guildName = args[1];
             var desc = desc.substr(desc.indexOf(" ") + 1);
         }
+        if (desc.length > 254) {
+            message.channel.send("Message is too long to be stored, please try again.");
+            return;
+        }
         var gJson = ["normal", current, message.author.username, guildName, desc];
+        if (!verifyJson(gJson)) {
+            message.channel.send("Message could not be saved. Please try again.");
+            return;
+        }
         guilds[message.author.id] = gJson;
         fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
         message.channel.send("Guild *" + guildName + "* added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
@@ -441,6 +462,20 @@ exports.functions = {
         var date = new Date();
         var current = date.toString();
         var gJson = ["format", current, message.author.username, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
+        for (arg in gJson) {
+            if (gJson[arg].length > 254) {
+                message.channel.send("One or more of the arguments were too long. Please try again.");
+                return;
+            }
+            if (gJson[arg].length == 0) {
+                message.channel.send("One or more of the arguments were short long. Please try again.");
+                return;
+            }
+        }
+        if (!verifyJson(gJson)) {
+            message.channel.send("Message could not be saved. Please try again.");
+            return;
+        }
         guilds[message.author.id] = gJson;
         fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
         message.channel.send("Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
@@ -527,7 +562,12 @@ exports.functions = {
                 voteOptions.push([]);
             }
         }
-        votes[rawSplit[1]] = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions, "closed" : false};
+        var vJson = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions, "closed" : false};
+        if (!verifyJson(vJson)) {
+            message.channel.send("Message could not be saved. Please try again.");
+            return;
+        }
+        votes[rawSplit[1]] = vJson;
         fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
         //display the new poll
         displayPoll(message, rawSplit[1]);
@@ -911,4 +951,12 @@ var displayPoll = function(message, nameOfPoll) {
         num++;
     }
     message.channel.send(textMessage);
+}
+function verifyJson(json) {
+    try {
+        JSON.stringify(json);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
