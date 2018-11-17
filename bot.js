@@ -25,7 +25,7 @@ rule.dayOfWeek = [0,6];
 rule.hour = [1,5,9,13,17,21];
 rule.minute = 50;
 //set to utc
-rule.tz = 'America/Atikokan';
+rule.tz = 'America/Indiana/Indianapolis';
 
 var bingoFunction = schedule.scheduleJob(rule, function(){
     var bingoRole = bot.guilds.find("id", serverID).roles.find("name", "bingo");
@@ -38,43 +38,49 @@ bot.on("ready", function() {
     bot.user.setAvatar("./storage/avatar.png")
 });
 
-bot.on("message", function(message) {
-	if (message.author.equals(bot.user)) {
-		return;
-    }
-    
-    if (botRegex.test(message.content.toLowerCase())) {
-        message.react("\uD83D\uDC40");
-    }
+bot.on("error", console.error)
 
-    if (!message.content.startsWith(PREFIX)) {
-        return;
-    }
-
-    if (questionRegex.test(message.content)) {
-        return;
-    }
-
-    var args = message.content.substring(PREFIX.length).split(" ");
-
-    //Hashmap stuff
-    if (hashArray.indexOf(args[0].toLowerCase()) > -1) {
-        try {
-            commands.functions[args[0].toLowerCase()](message);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-    else {
-        if (customCommands.hasOwnProperty(args[0].toLowerCase())) {
-            message.channel.send(customCommands[args[0].toLowerCase()]);
-            deleteMessage(message);
+try {
+    bot.on("message", function(message) {
+        if (message.author.equals(bot.user)) {
             return;
         }
-        message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
-    }
-    deleteMessage(message);
-});
+        
+        if (botRegex.test(message.content.toLowerCase())) {
+            message.react("\uD83D\uDC40");
+        }
+
+        if (!message.content.startsWith(PREFIX)) {
+            return;
+        }
+
+        if (questionRegex.test(message.content)) {
+            return;
+        }
+
+        var args = message.content.substring(PREFIX.length).split(" ");
+
+        //Hashmap stuff
+        if (hashArray.indexOf(args[0].toLowerCase()) > -1) {
+            try {
+                commands.functions[args[0].toLowerCase()](message);
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        else {
+            if (customCommands.hasOwnProperty(args[0].toLowerCase())) {
+                message.channel.send(customCommands[args[0].toLowerCase()]);
+                deleteMessage(message);
+                return;
+            }
+            message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
+        }
+        deleteMessage(message);
+    });
+} catch (err) {
+    console.log(err)
+}
        
 bot.login(TOKEN);
 
