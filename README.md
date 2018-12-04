@@ -2,6 +2,8 @@
 A Discord bot for the official IOURPG server located here - https://discord.gg/zynuQcP.
 Made with Nodejs and Discordjs, using json files to store data locally.
 
+_An extended version of this bot for IOU Guild Discord Servers can be found at https://github.com/puremana/me-bot_
+
 ## Commands
 All commands start with the prefix allocated in the bot.js and command.js files.
 
