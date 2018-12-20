@@ -9,7 +9,8 @@
   "author": "Level",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.2.1",
+    "bufferutil": "^3.0.5",
+    "discord.js": "^11.4.2",
     "fs": "0.0.1-security",
     "node-schedule-tz": "^1.2.1-4"
   }

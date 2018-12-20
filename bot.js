@@ -34,7 +34,7 @@ var bingoFunction = schedule.scheduleJob(rule, function(){
 
 bot.on("ready", function() {
 	console.log("Bot ready...");
-	bot.user.setGame(PREFIX + "help " + PREFIX + "info")
+	bot.user.setActivity(PREFIX + "help " + PREFIX + "info")
     bot.user.setAvatar("./storage/avatar.png")
 });
 
