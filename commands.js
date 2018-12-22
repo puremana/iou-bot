@@ -13,6 +13,8 @@ var bot;
 const BINGOCHANNELID = "395460192420233216";
 const CHALLENGECHANNELID = "146030310767722496";
 const BINGOTIMEOUT = 5000;
+const IOUTEAMROLEID = "146018825744154624";
+const HELPERROLEID = "383301408759480320";
 
 
 exports.setters = {
@@ -63,7 +65,7 @@ exports.functions = {
         var stringDate = EST.getDate() + "/" + (EST.getMonth() + 1) + "/" + EST.getFullYear();
         var stringTime = EST.getHours() + ":" + EST.getMinutes() + ":" + EST.getSeconds();
         message.author.send("**Server Time:** " + days[EST.getDay()] + " " + stringDate + " " + stringTime + " (EST)");
-    }, 
+    },
     help: function(message) {
         var showingRoles = "";
         var additionalBot = "";
@@ -71,7 +73,7 @@ exports.functions = {
         var additionalGuild = "";
     
         if (message.member != null) {
-            if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+            if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
                 showingRoles = "IOU Team";
                 additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
                 PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
@@ -213,7 +215,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             if (args.length < 3) {
                 message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
                 return;
@@ -237,7 +239,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             if (args.length == 2) {
                 for (c in customCommands) {
                     if (args[1].toLowerCase() == c) {
@@ -263,7 +265,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             var args = message.content.substring(PREFIX.length).split(" ");
             var user = bot.users.find("id", args[1]);
             var rules = "**1)**    No spamming or flooding the chat with messages outside of #spam. \n" +
@@ -289,7 +291,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             var text = message.content.substring(PREFIX.length + 5);
             message.channel.send(text);
             if (message.channel.type != "dm") {
@@ -360,7 +362,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             var name = message.content.substring(PREFIX.length + "removepartyname".length + 1);
             for (party in parties) {
                 if (parties[party][1] == name) {
@@ -381,7 +383,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             parties = {};
             parties["id"] = ['time','name','required dps','description'];
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
@@ -483,7 +485,7 @@ exports.functions = {
             message.channel.send("Message author is undefined.");
             return;
         }
-        if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper")) {
+        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             guilds = {};
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             message.channel.send("All guilds have been reset.");
@@ -710,7 +712,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to close poll
-                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't already closed
                     if (votes[v]["closed"] == true) {
                         message.channel.send("This poll has already been closed.");
@@ -740,7 +742,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to close poll
-                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't open
                     if (votes[v]["closed"] == false) {
                         message.channel.send("This poll is already open.");
@@ -770,7 +772,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to delete
-                if (message.member.roles.find("name", "IOU Team") || message.member.roles.find("name", "Helper") || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //delete poll
                     delete votes[v];
                     message.channel.send("Poll **" + rawSplit[1] + "** is now deleted.");
