@@ -23,7 +23,7 @@ All commands start with the prefix allocated in the bot.js and command.js files.
 - Party/Guild Commands
   - `addparty` - `addparty required-dps description`
   - `removeparty`
-  - `?parties`
+  - `parties`
   - `resetparties` *(admin only)*
   - `addguild` - `addguild "guild name" description`
   - `addguildformat` - `addguildformat "guild name" "guild level" "guild buildings" "stone required" "DPS required" "members in guild" "spots open" "description"`
