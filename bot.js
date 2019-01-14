@@ -10,7 +10,7 @@ const TOKEN = config.token;
 const TIMEOUT = 1500;
 const questionRegex = /^[?]+$/;
 const botRegex = /\bbot\b/;
-const serverID = "146007387466235905";
+const serverID = "355227226389872641";
 
 //Load Bot - loop through functions in commands and add to hashmap
 var hashArray = [];
@@ -34,8 +34,9 @@ var bingoFunction = schedule.scheduleJob(rule, function(){
 
 bot.on("ready", function() {
 	console.log("Bot ready...");
-	bot.user.setActivity(PREFIX + "help " + PREFIX + "info")
+	bot.user.setActivity(PREFIX + "help " + PREFIX + "info");
     bot.user.setAvatar("./storage/avatar.png")
+        .catch(err => console.log(err));
 });
 
 bot.on("error", console.error)
@@ -70,11 +71,13 @@ try {
         }
         else {
             if (customCommands.hasOwnProperty(args[0].toLowerCase())) {
-                message.channel.send(customCommands[args[0].toLowerCase()]);
+                message.channel.send(customCommands[args[0].toLowerCase()])
+                    .catch(err => console.log(err));
                 deleteMessage(message);
                 return;
             }
-            message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands");
+            message.channel.send("Invalid command, type **" + PREFIX + "help** to get current list of commands")
+                .catch(err => console.log(err));
         }
         deleteMessage(message);
     });
@@ -86,10 +89,7 @@ bot.login(TOKEN);
 
 var deleteMessage = function(message) {
     if (message.channel.type != "dm") {
-        try {
-            message.delete(TIMEOUT);
-        } catch (err) {
-            console.log(err)
-        }
+        message.delete(TIMEOUT)
+            .catch(err => console.log(err));
     }
 }

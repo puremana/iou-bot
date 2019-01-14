@@ -27,32 +27,32 @@ exports.functions = {
     //Challenge Commands
     bronze: function(message) {
         if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
-            message.channel.send("http://i.imgur.com/POra9Kx.jpg");
+            reply(message, "http://i.imgur.com/POra9Kx.jpg");
         }
     },
     silver: function(message) {
         if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
-            message.channel.send("http://i.imgur.com/rkJ51fC.jpg");
+            reply(message, "http://i.imgur.com/rkJ51fC.jpg");
         }
     },
     gold: function(message) {
         if ((message.channel.id == CHALLENGECHANNELID) || (message.channel.type == "dm")) {
-            message.channel.send("http://i.imgur.com/5GXghiA.jpg");
+            reply(message, "http://i.imgur.com/5GXghiA.jpg");
         }
     },
 
     //Event Commands
     invasion: function(message) {
-        message.channel.send("https://docs.google.com/spreadsheets/d/1RDw0FEdFd6lKhmvMK972J5_xvvjVYeUYrTQQ4ZbMR74/edit");
+        reply(message, "https://docs.google.com/spreadsheets/d/1RDw0FEdFd6lKhmvMK972J5_xvvjVYeUYrTQQ4ZbMR74/edit");
     },
     energyevent: function(message) {
-        message.channel.send("https://docs.google.com/spreadsheets/d/1R97uuDvEI80LBbqxveXIyHbwMGXG-nZsGvlH5YNoiV8/edit");
+        reply(message, "https://docs.google.com/spreadsheets/d/1R97uuDvEI80LBbqxveXIyHbwMGXG-nZsGvlH5YNoiV8/edit");
     },
     rpg: function(message) {
-        message.channel.send("https://docs.google.com/document/d/1laVfybGGtTsXs_jeXQcE9yUpV8xz0FMokBFvCSIcIa4/edit?usp=sharing")
+        reply(message, "https://docs.google.com/document/d/1laVfybGGtTsXs_jeXQcE9yUpV8xz0FMokBFvCSIcIa4/edit?usp=sharing")
     },
     mafia: function(message) {
-        message.channel.send("https://docs.google.com/spreadsheets/d/1AzBi0Dt9AePvASVeiWAUSSVcpTHfpQlUzDrIWxCL8AA/edit#gid=0");
+        reply(message, "https://docs.google.com/spreadsheets/d/1AzBi0Dt9AePvASVeiWAUSSVcpTHfpQlUzDrIWxCL8AA/edit#gid=0");
     },
 
     //Bot Related Commands
@@ -174,7 +174,7 @@ exports.functions = {
         .setColor(0x9B59B6)
         .setFooter("Source code: https://github.com/puremana/iou-bot")
         .setThumbnail(bot.user.avatarURL)
-        message.channel.send(embed);
+        reply(message, embed);
     },
     serverinfo: function(message) {
         if (message.channel.type == "dm") {
@@ -204,20 +204,21 @@ exports.functions = {
         .addField("Total Members", totalMembers, true)
         .addField("Invite Link", "https://discord.gg/WfcvtZm", true)
         .setFooter("Server creation - " + message.guild.createdAt, message.guild.owner.user.avatarURL)
-        message.channel.send(embed);
+        
+        reply(message, "test");
     },
     suggest: function(message) {
-        message.channel.send("Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
+        reply(message, "Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
     },
     add: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             if (args.length < 3) {
-                message.channel.send("Please enter the command in the format `" + PREFIX + "add command_name command description`.");
+                reply(message, "Please enter the command in the format `" + PREFIX + "add command_name command description`.");
                 return;
             }
             var desc = "";
@@ -227,15 +228,15 @@ exports.functions = {
             var command = "\'" + args[1].toLowerCase() + "': '" + desc + "',";
             customCommands[args[1].toLowerCase()] = desc;
             fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
-            message.channel.send("Command " + PREFIX + args[1] + " added.");
+            reply(message, "Command " + PREFIX + args[1] + " added.");
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     remove: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -245,24 +246,24 @@ exports.functions = {
                     if (args[1].toLowerCase() == c) {
                         delete customCommands[c];
                         fs.writeFile("storage/custom.json", JSON.stringify(customCommands), "utf8");
-                        message.channel.send("Command " + PREFIX + args[1] + " removed.");
+                        reply(message, "Command " + PREFIX + args[1] + " removed.");
                         return;
                     }
                 }
-                message.channel.send("There is no " + PREFIX + args[1] + " command.");
+                reply(message, "There is no " + PREFIX + args[1] + " command.");
             }
             else {
-                message.channel.send("Please enter the command in the format `" + PREFIX + "remove command_name`.");
+                reply(message, "Please enter the command in the format `" + PREFIX + "remove command_name`.");
                 return;
             }
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     rules: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
@@ -283,17 +284,17 @@ exports.functions = {
             user.send(embed);
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     echo: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             var text = message.content.substring(PREFIX.length + 5);
-            message.channel.send(text);
+            reply(message, text);
             if (message.channel.type != "dm") {
                 try {
                     message.delete(0);
@@ -303,19 +304,19 @@ exports.functions = {
             }
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
 
     //Parties - Guilds    
     addparty: function(message) {
         if (message.author == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
         if (args.length < 3) {
-            message.channel.send("Please enter the command in the format `" + PREFIX + "addparty required-dps description`.");
+            reply(message, "Please enter the command in the format `" + PREFIX + "addparty required-dps description`.");
             return;
         }
         var date = new Date();
@@ -325,41 +326,41 @@ exports.functions = {
             desc = desc + args[i] + " ";
         }
         if (desc.length == 0) {
-            message.channel.send("Description was short to be stored, please try again.");
+            reply(message, "Description was short to be stored, please try again.");
             return;
         }
         if (desc.length > 244) {
-            message.channel.send("Description was too long to be stored, please try again.");
+            reply(message, "Description was too long to be stored, please try again.");
             return;
         }
         //make it an array :]
         var pJson = [current, message.author.username, args[1], desc];
         if (!verifyJson(pJson)) {
-            message.channel.send("Message could not be saved. Please try again.");
+            reply(message, "Message could not be saved. Please try again.");
             return;
         }
         parties[message.author.id] = pJson;
         fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
-        message.channel.send("Party added. Type **" + PREFIX + "parties** to get sent a list of current available parties");
+        reply(message, "Party added. Type **" + PREFIX + "parties** to get sent a list of current available parties");
     },
     removeparty: function(message) {
         if (message.author == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         for (p in parties) {
             if (message.author.id == p) {
                 delete parties[p];
                 fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
-                message.channel.send("Party removed.");
+                reply(message, "Party removed.");
                 return;
             }
         }
-        message.channel.send("Couldn't find party for " + message.author.username);
+        reply(message, "Couldn't find party for " + message.author.username);
     },
     removepartyname: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
@@ -368,29 +369,29 @@ exports.functions = {
                 if (parties[party][1] == name) {
                     delete parties[party];
                     fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
-                    message.channel.send(name + "'s party has been deleted.");
+                    reply(message, name + "'s party has been deleted.");
                     return;
                 }
             }
-            message.channel.send("Please enter a valid name to delete.");
+            reply(message, "Please enter a valid name to delete.");
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     resetparties: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             parties = {};
             parties["id"] = ['time','name','required dps','description'];
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
-            message.channel.send("All parties have been reset.");
+            reply(message, "All parties have been reset.");
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     parties: function(message) {
@@ -404,12 +405,12 @@ exports.functions = {
     },
     addguild: function(message) {
         if (message.author == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");    
         if (args.length < 3) {
-            message.channel.send("Please enter the command in the format `" + PREFIX + "addguild \"guildname\" description`.");
+            reply(message, "Please enter the command in the format `" + PREFIX + "addguild \"guildname\" description`.");
             return;
         }
         var date = new Date();
@@ -432,21 +433,21 @@ exports.functions = {
             var desc = desc.substr(desc.indexOf(" ") + 1);
         }
         if (desc.length > 254) {
-            message.channel.send("Message is too long to be stored, please try again.");
+            reply(message, "Message is too long to be stored, please try again.");
             return;
         }
         var gJson = ["normal", current, message.author.username, guildName, desc];
         if (!verifyJson(gJson)) {
-            message.channel.send("Message could not be saved. Please try again.");
+            reply(message, "Message could not be saved. Please try again.");
             return;
         }
         guilds[message.author.id] = gJson;
         fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
-        message.channel.send("Guild *" + guildName + "* added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
+        reply(message, "Guild *" + guildName + "* added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
     },
     addguildformat: function(message) {
         if (message.author == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -456,7 +457,7 @@ exports.functions = {
         }
         var rawSplit = desc.split("\"");
         if (rawSplit.length != 17) {
-            message.channel.send("Please enter the command in the following format `" + PREFIX + "addguildformat \"guild name\" \"guild level\" \"guild buildings\" \"stone required\" \"DPS required\" \"members in guild\" \"spots open\" \"description\"`");
+            reply(message, "Please enter the command in the following format `" + PREFIX + "addguildformat \"guild name\" \"guild level\" \"guild buildings\" \"stone required\" \"DPS required\" \"members in guild\" \"spots open\" \"description\"`");
             return;
         }
         var date = new Date();
@@ -464,39 +465,39 @@ exports.functions = {
         var gJson = ["format", current, message.author.username, rawSplit[1], rawSplit[3], rawSplit[5], rawSplit[7], rawSplit[9], rawSplit[11], rawSplit[13], rawSplit[15]];
         for (arg in gJson) {
             if (gJson[arg].length > 254) {
-                message.channel.send("One or more of the arguments were too long. Please try again.");
+                reply(message, "One or more of the arguments were too long. Please try again.");
                 return;
             }
             if (gJson[arg].length == 0) {
-                message.channel.send("One or more of the arguments were short long. Please try again.");
+                reply(message, "One or more of the arguments were short long. Please try again.");
                 return;
             }
         }
         if (!verifyJson(gJson)) {
-            message.channel.send("Message could not be saved. Please try again.");
+            reply(message, "Message could not be saved. Please try again.");
             return;
         }
         guilds[message.author.id] = gJson;
         fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
-        message.channel.send("Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
+        reply(message, "Guild " + rawSplit[1] + " added. Type **" + PREFIX + "guilds** to get sent a list of current available guilds.");
     },
     resetguilds: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             guilds = {};
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
-            message.channel.send("All guilds have been reset.");
+            reply(message, "All guilds have been reset.");
         }
         else {
-            message.channel.send("You do not have the IOU Team role.");
+            reply(message, "You do not have the IOU Team role.");
         }
     },
     removeguild: function(message) {
         if (message.author == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         for (g in guilds) {
@@ -504,11 +505,11 @@ exports.functions = {
                 var guildName = guilds[g][3];
                 delete guilds[g];
                 fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
-                message.channel.send(guildName + " guild removed.");
+                reply(message, guildName + " guild removed.");
                 return;
             }
         }
-        message.channel.send("Couldn't find party for " + message.author.username);
+        reply(message, "Couldn't find party for " + message.author.username);
     },
     guilds: function(message) {
         for (g in guilds) {
@@ -537,7 +538,7 @@ exports.functions = {
     //Voting
     votenew: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -545,13 +546,13 @@ exports.functions = {
         //if there is already a poll with this name
         for (v in votes) {
             if (v == rawSplit[1]) {
-                message.channel.send("There is already a poll with the name **" + rawSplit[1] + "**. Please `?voteclose` it before recreating.");
+                reply(message, "There is already a poll with the name **" + rawSplit[1] + "**. Please `?voteclose` it before recreating.");
                 return;
             }
         }
         //if the poll options isn't an int
         if (isNaN(rawSplit[3])) {
-            message.channel.send("Please make sure the second argument (number of votes) is a number before creating the poll.");
+            reply(message, "Please make sure the second argument (number of votes) is a number before creating the poll.");
             return;
         }
         //create a new poll with those options
@@ -564,7 +565,7 @@ exports.functions = {
         }
         var vJson = {"author" : message.author.id, "numOptions" : rawSplit[3], "voteOptions" : voteOptions, "closed" : false};
         if (!verifyJson(vJson)) {
-            message.channel.send("Message could not be saved. Please try again.");
+            reply(message, "Message could not be saved. Please try again.");
             return;
         }
         votes[rawSplit[1]] = vJson;
@@ -574,7 +575,7 @@ exports.functions = {
     },
     vote: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -595,18 +596,18 @@ exports.functions = {
                     }
                 }
                 if (numVotes <= count) {
-                    message.channel.send(':negative_squared_cross_mark: Already voted, please use `?votereset "poll name"` before trying again.');
+                    reply(message, ':negative_squared_cross_mark: Already voted, please use `?votereset "poll name"` before trying again.');
                     return;
                 }
                 //check the poll isn't closed already
                 if (votes[v]["closed"] == true) {
-                    message.channel.send(':negative_squared_cross_mark: This poll has been closed.');
+                    reply(message, ':negative_squared_cross_mark: This poll has been closed.');
                     return;
                 }
                 //check number of votes they are doing is less than what's in there
                 var messageVotes = (rawSplit.count - 2) / 2;
                 if ((messageVotes + count) > numVotes) {
-                    message.channel.send(':negative_squared_cross_mark: Trying to enter too many votes, please use `?votereset "poll name"` before trying again.');
+                    reply(message, ':negative_squared_cross_mark: Trying to enter too many votes, please use `?votereset "poll name"` before trying again.');
                     return;
                 }
                 //if they haven't put their vote or votes in 
@@ -614,18 +615,18 @@ exports.functions = {
                 var theVotes = [];
                 for (var l = 3; l < rawSplit.length; l = l + 2) {
                     if (isNaN(rawSplit[l])) {
-                        message.channel.send(':negative_squared_cross_mark: Use digits to indicate what you are voting for. Please try again.');
+                        reply(message, ':negative_squared_cross_mark: Use digits to indicate what you are voting for. Please try again.');
                         return;
                     }
                     if (parseInt(rawSplit[l]) > (poll.length / 2)) {
-                        message.channel.send(':negative_squared_cross_mark: One or more of your votes are not in the poll. Please try again.');
+                        reply(message, ':negative_squared_cross_mark: One or more of your votes are not in the poll. Please try again.');
                         return;
                     }
                     theVotes.push(rawSplit[l]);
                 }
                 //check not voting for same thing twice
                 if ((new Set(theVotes)).size !== theVotes.length) {
-                    message.channel.send(':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
+                    reply(message, ':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
                     return;
                 }
                 //else put their vote in
@@ -633,7 +634,7 @@ exports.functions = {
                     var num = parseInt(theVotes[j]) + parseInt(theVotes[j] - 1);
                     for (var o = 0; o < poll[num].length; o++) {
                         if (poll[num][o] == message.author.id) {
-                            message.channel.send(':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
+                            reply(message, ':negative_squared_cross_mark: You cannot vote for the same option twice. Please try again.');
                             return;
                         }
                     }
@@ -641,21 +642,21 @@ exports.functions = {
                 }
                 fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                 if (theVotes.length == 1) {
-                    message.channel.send(':white_check_mark: Your vote has been registered.');
+                    reply(message, ':white_check_mark: Your vote has been registered.');
                 }
                 else {
-                    message.channel.send(':white_check_mark: Your votes have been registered.');
+                    reply(message, ':white_check_mark: Your votes have been registered.');
                 }
                 displayPoll(message, rawSplit[1]);
                 return;
             }
         }
-        message.channel.send(":negative_squared_cross_mark: Couldn't find poll name " + rawSplit[1]);
+        reply(message, ":negative_squared_cross_mark: Couldn't find poll name " + rawSplit[1]);
         return;
     },
     votecheck: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -673,20 +674,20 @@ exports.functions = {
                     }
                 }
                 if (arrayResult.length > 0) {
-                    message.channel.send("Your current votes in poll **" + rawSplit[1] + "** are options " + arrayResult);
+                    reply(message, "Your current votes in poll **" + rawSplit[1] + "** are options " + arrayResult);
                 }
                 else {
-                    message.channel.send("You haven't voted in this poll yet.");
+                    reply(message, "You haven't voted in this poll yet.");
                 }
                 return;
             }
         }
-        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        reply(message, "Couldn't find poll name " + rawSplit[1]);
         return;
     },
     votedisplay: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -698,12 +699,12 @@ exports.functions = {
                 return;
             }
         }
-        message.channel.send("Couldn't find poll name " + rawSplit[1]);
+        reply(message, "Couldn't find poll name " + rawSplit[1]);
         return;
     },
     voteclose: function (message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -715,17 +716,17 @@ exports.functions = {
                 if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't already closed
                     if (votes[v]["closed"] == true) {
-                        message.channel.send("This poll has already been closed.");
+                        reply(message, "This poll has already been closed.");
                         return;
                     }
                     //close poll
                     votes[v]["closed"] = true;
-                    message.channel.send("Poll **" + rawSplit[1] + "** is now closed.");
+                    reply(message, "Poll **" + rawSplit[1] + "** is now closed.");
                     fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                     return;
                 }
                 else {
-                    message.channel.send("You do not have permissions to close this poll.");
+                    reply(message, "You do not have permissions to close this poll.");
                     return;
                 }
             }
@@ -733,7 +734,7 @@ exports.functions = {
     },
     voteopen: function (message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -745,17 +746,17 @@ exports.functions = {
                 if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't open
                     if (votes[v]["closed"] == false) {
-                        message.channel.send("This poll is already open.");
+                        reply(message, "This poll is already open.");
                         return;
                     }
                     //open poll
                     votes[v]["closed"] = false;
-                    message.channel.send("Poll **" + rawSplit[1] + "** has been reopened.");
+                    reply(message, "Poll **" + rawSplit[1] + "** has been reopened.");
                     fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                     return;
                 }
                 else {
-                    message.channel.send("You do not have permissions to open this poll.");
+                    reply(message, "You do not have permissions to open this poll.");
                     return;
                 }
             }
@@ -763,7 +764,7 @@ exports.functions = {
     },
     votedelete: function (message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -775,12 +776,12 @@ exports.functions = {
                 if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //delete poll
                     delete votes[v];
-                    message.channel.send("Poll **" + rawSplit[1] + "** is now deleted.");
+                    reply(message, "Poll **" + rawSplit[1] + "** is now deleted.");
                     fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
                     return;
                 }
                 else {
-                    message.channel.send("You do not have permissions to close this poll.");
+                    reply(message, "You do not have permissions to close this poll.");
                     return;
                 }
             }
@@ -788,7 +789,7 @@ exports.functions = {
     },
     votereset: function(message) {
         if (message.member == null) {
-            message.channel.send("Message author is undefined.");
+            reply(message, "Message author is undefined.");
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
@@ -804,7 +805,7 @@ exports.functions = {
                         poll[i].splice(index, 1);
                     }
                 }
-                message.channel.send("Your responses for poll **" + rawSplit[1] + "** have been reset.");
+                reply(message, "Your responses for poll **" + rawSplit[1] + "** have been reset.");
                 fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
             }
         }
@@ -812,25 +813,25 @@ exports.functions = {
 
     //Useful Links
     guide: function(message) {
-        message.channel.send("https://tinyurl.com/IOUguide");
+        reply(message, "https://tinyurl.com/IOUguide");
     },
     multicalc: function(message) {
-        message.channel.send("https://docs.google.com/spreadsheets/d/1QGBm6KtcOZraqSkLWVuqTF16vUD7rrOvIpdh59bFLmg/edit#gid=357923173");
+        reply(message, "https://docs.google.com/spreadsheets/d/1QGBm6KtcOZraqSkLWVuqTF16vUD7rrOvIpdh59bFLmg/edit#gid=357923173");
     },
     forum: function(message) {
-        message.channel.send("http://iourpg.com/forum");
+        reply(message, "http://iourpg.com/forum");
     },
     wiki: function(message) {
-        message.channel.send("http://iourpg.wikia.com/wiki/Idle_Online_Universe_Wiki");
+        reply(message, "http://iourpg.wikia.com/wiki/Idle_Online_Universe_Wiki");
     },
     cards: function(message) {
-        message.channel.send("http://iouhelper.com/cards.html");
+        reply(message, "http://iouhelper.com/cards.html");
     },
     test: function(message) {
-        message.channel.send("https://discord.gg/ncEarFv");
+        reply(message, "https://discord.gg/ncEarFv");
     },
     trello: function(message) {
-        message.channel.send("https://trello.com/b/usVhG9Ry/iou-development-board");
+        reply(message, "https://trello.com/b/usVhG9Ry/iou-development-board");
     },
 
     //bingo
@@ -881,7 +882,7 @@ exports.functions = {
         }
         Promise.all([httpRequest("http", "random.cat", "/meow")]).then(values => { 
             catJson = JSON.parse(values[0]);
-            message.channel.send(catJson.file);
+            reply(message, catJson.file);
         });
     },
     dog: function(message) {
@@ -890,7 +891,7 @@ exports.functions = {
         }
         Promise.all([httpRequest("https", "dog.ceo", "/api/breeds/image/random")]).then(values => { 
             dogJson = JSON.parse(values[0]);
-            message.channel.send(dogJson.message);
+            reply(message, dogJson.message);
         });
     },
     flip: function(message) {
@@ -899,10 +900,10 @@ exports.functions = {
         }
         var toss = (Math.floor(Math.random() * 2) == 0);
         if (toss) {
-            message.channel.send("Heads");
+            reply(message, "Heads");
         } 
         else {
-            message.channel.send("Tails");
+            reply(message, "Tails");
         }
     },
     ball: function(message) {
@@ -911,7 +912,7 @@ exports.functions = {
         }
         Promise.all([httpRequest("https", "8ball.delegator.com", "/magic/JSON/abc")]).then(values => { 
             ballJson = JSON.parse(values[0]);
-            message.channel.send(ballJson.magic.answer);
+            reply(message, ballJson.magic.answer);
         });
     }
 }
@@ -950,7 +951,7 @@ var displayPoll = function(message, nameOfPoll) {
         textMessage = textMessage + "`[" + num + "] " + poll[i] + ": " + poll[i + 1].length + "`\n";
         num++;
     }
-    message.channel.send(textMessage);
+    reply(message, textMessage);
 }
 function verifyJson(json) {
     try {
@@ -959,4 +960,8 @@ function verifyJson(json) {
         return false;
     }
     return true;
+}
+function reply(message, content) {
+    message.channel.send(content)
+        .catch(err => console.log(err));
 }
