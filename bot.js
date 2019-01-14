@@ -27,9 +27,9 @@ rule.minute = 50;
 //set to utc
 rule.tz = 'America/Indiana/Indianapolis';
 
-var bingoFunction = schedule.scheduleJob(rule, function(){
-    var bingoRole = bot.guilds.find("id", serverID).roles.find("name", "bingo");
-    bot.guilds.find("id", serverID).channels.find("name", "bingo").send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
+var bingoFunction = schedule.scheduleJob(rule, function() {
+    var bingoRole = bot.guilds.find(val => val.id === serverID).roles.find(bin => bin.name === "bingo");
+    bot.guilds.find(val => val.id === serverID).channels.find(bin => bin.name === "bingo").send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
 });
 
 bot.on("ready", function() {
