@@ -25,7 +25,7 @@ rule.dayOfWeek = [0,6];
 rule.hour = [1,5,9,13,17,21];
 rule.minute = 50;
 //set to utc
-rule.tz = 'America/Indiana/Indianapolis';
+rule.tz = 'America/Atikokan';
 
 var bingoFunction = schedule.scheduleJob(rule, function() {
     var bingoRole = bot.guilds.find(val => val.id === serverID).roles.find(bin => bin.name === "bingo");
