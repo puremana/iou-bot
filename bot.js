@@ -10,7 +10,7 @@ const TOKEN = config.token;
 const TIMEOUT = 1500;
 const questionRegex = /^[?]+$/;
 const botRegex = /\bbot\b/;
-const serverID = "355227226389872641";
+const serverID = "146007387466235905";
 
 //Load Bot - loop through functions in commands and add to hashmap
 var hashArray = [];

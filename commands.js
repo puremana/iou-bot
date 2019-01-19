@@ -205,7 +205,7 @@ exports.functions = {
         .addField("Invite Link", "https://discord.gg/WfcvtZm", true)
         .setFooter("Server creation - " + message.guild.createdAt, message.guild.owner.user.avatarURL)
         
-        reply(message, "test");
+        reply(message, "embed");
     },
     suggest: function(message) {
         reply(message, "Suggest a change to the bot by creating an issue at https://github.com/puremana/iou-bot/issues");
