@@ -25,12 +25,14 @@ rule.dayOfWeek = [0,6];
 rule.hour = [1,5,9,13,17,21];
 rule.minute = 50;
 //set to utc
-rule.tz = 'America/Atikokan';
+rule.tz = 'America/Indiana/Indianapolis';
 
 var bingoFunction = schedule.scheduleJob(rule, function() {
     var bingoRole = bot.guilds.find(val => val.id === serverID).roles.find(bin => bin.name === "bingo");
     bot.guilds.find(val => val.id === serverID).channels.find(bin => bin.name === "bingo").send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
 });
+
+commands.setters["setBingoFunction"](bingoFunction);
 
 bot.on("ready", function() {
 	console.log("Bot ready...");

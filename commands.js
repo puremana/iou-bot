@@ -15,11 +15,15 @@ const CHALLENGECHANNELID = "146030310767722496";
 const BINGOTIMEOUT = 5000;
 const IOUTEAMROLEID = "146018825744154624";
 const HELPERROLEID = "383301408759480320";
+var bingoFunction;
 
 
 exports.setters = {
     setBot: function(theBot) {
         bot = theBot;
+    },
+    setBingoFunction: function(theBingoFunction) {
+        bingoFunction = theBingoFunction;
     }
 }
 
@@ -873,6 +877,41 @@ exports.functions = {
                 .then(m => m.delete(BINGOTIMEOUT))
                 .catch(err => console.log(err));
         }
+    },
+    bingowhen: function(message) {
+        if (message.author == null) {
+            return;
+        }
+        if (message.channel.id != BINGOCHANNELID) {
+            return;
+        }
+
+        let bingoDate = bingoFunction.nextInvocation().getTime();
+        let now = Date.now();
+        let diff = bingoDate - now;
+
+        var msec = diff;
+        var days = Math.floor(msec / 1000 / 60 / 60 / 24);
+        msec -= days * 1000 * 60 * 60 * 24;
+        var hours = Math.floor(msec / 1000 / 60 / 60);
+        msec -= hours * 1000 * 60 * 60;
+        var minutes = Math.floor(msec / 1000 / 60);
+        msec -= minutes * 1000 * 60;
+        var seconds = Math.floor(msec / 1000);
+        msec -= seconds * 1000;
+
+        let stringDiff = "The next bingo will be in ";
+        
+        if (days > 0) {
+            stringDiff = stringDiff + days + " days, ";
+        }
+        if (hours > 0) {
+            stringDiff = stringDiff + hours + " hours, ";
+        }
+
+        stringDiff = stringDiff + minutes + " minutes, and " + seconds + " seconds";
+
+        message.author.send(stringDiff);
     },
 
     //fun
