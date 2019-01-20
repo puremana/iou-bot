@@ -911,7 +911,7 @@ exports.functions = {
 
         stringDiff = stringDiff + minutes + " minutes, and " + seconds + " seconds";
 
-        message.author.send(stringDiff);
+        message.channel.send(stringDiff);
     },
 
     //fun
