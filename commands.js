@@ -887,11 +887,12 @@ exports.functions = {
         }
 
         let bingoDate = bingoFunction.nextInvocation().getTime();
+        // Adjusting for the 10 minutes before bingo that the bot sends the notifcation message
+        bingoDate = bingoDate + 600000;
         let now = Date.now();
         let diff = bingoDate - now;
 
-        // Adjusting for the 10 minutes before bingo that the bot sends the notifcation message
-        var msec = diff + 600000;
+        var msec = diff;
         var days = Math.floor(msec / 1000 / 60 / 60 / 24);
         msec -= days * 1000 * 60 * 60 * 24;
         var hours = Math.floor(msec / 1000 / 60 / 60);
