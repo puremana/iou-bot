@@ -87,7 +87,7 @@ exports.functions = {
                 additionalGuild = additionalParty + PREFIX + "resetguilds *(IOU Team only)* \n";
                 additionalGuild = additionalParty + PREFIX + "removepartyname *(IOU Team only)* \n";
             }
-            else if (message.member.roles.find("name", "Spun & Spud")) {
+            else if (message.member.roles.find(role => role.name === "Spun & Spud")) {
                 showingRoles = "Spun & Spud";
             }
             else {
@@ -109,6 +109,7 @@ exports.functions = {
         PREFIX + "serverinfo \n" +
         PREFIX + "bingoadd \n" +
         PREFIX + "bingoremove \n" +
+        PREFIX + "bingowhen \n" +
         additionalBot;
     
         var challengeCommands = PREFIX + "bronze \n" +
@@ -272,7 +273,7 @@ exports.functions = {
         }
         if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
             var args = message.content.substring(PREFIX.length).split(" ");
-            var user = bot.users.find("id", args[1]);
+            var user = bot.users.find(user => user.id === args[1]);
             var rules = "**1)**    No spamming or flooding the chat with messages outside of #spam. \n" +
             "**2)**    Keep heated arguments inside #jerry-springer. \n" + 
             "**3)**    No adult (18+), explicit, or controversial messages. \n" +
@@ -845,14 +846,14 @@ exports.functions = {
             return;
         }
         //check doesn't already have bingo role
-        if (message.member.roles.find("name", "bingo")) {
+        if (message.member.roles.find(role => role.name === "bingo")) {
             message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove it.")
                 .then(m => m.delete(BINGOTIMEOUT))
                 .catch(err => console.log(err));
             return;
         }
         //add the role
-        var bingoRole = message.member.guild.roles.find("name", "bingo");
+        var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
         message.channel.send("Your bingo role has been added.")
             .then(m => m.delete(BINGOTIMEOUT))
             .catch(err => console.log(err));
@@ -864,9 +865,9 @@ exports.functions = {
             return;
         }
         //check they have the bingo role
-        if (message.member.roles.find("name", "bingo")) {
+        if (message.member.roles.find(role => role.name === "bingo")) {
             //remove the role
-            var bingoRole = message.member.guild.roles.find("name", "bingo");
+            var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
             message.channel.send("Your bingo role has been removed.")
                 .then(m => m.delete(BINGOTIMEOUT))
                 .catch(err => console.log(err));
