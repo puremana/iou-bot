@@ -15,6 +15,7 @@ const CHALLENGECHANNELID = "146030310767722496";
 const BINGOTIMEOUT = 5000;
 const IOUTEAMROLEID = "146018825744154624";
 const HELPERROLEID = "383301408759480320";
+const TEST_SERVER_ID = "158651598741045248";
 var bingoFunction;
 
 
@@ -813,6 +814,39 @@ exports.functions = {
                 reply(message, "Your responses for poll **" + rawSplit[1] + "** have been reset.");
                 fs.writeFile("storage/votes.json", JSON.stringify(votes), "utf8");
             }
+        }
+    },
+    
+    // Test Server Commands
+    tester: function(message) {
+        if (message.guild.id !== TEST_SERVER_ID) {
+            return;
+        }
+
+        // Check doesn't already have Active Testers role
+        if (message.member.roles.find(role => role.name === "Active Testers")) {
+            reply(message, "You already have the Active Testers role. Use `" + PREFIX + "notester` to remove it.");
+            return;
+        }
+        // Add the role
+        var testerRole = message.member.guild.roles.find(role => role.name === "Active Testers");
+        message.member.addRole(testerRole, "Command issued.");
+        reply(message, "Your Active Testers role has been added.");
+    },
+    notester: function(message) {
+        if (message.guild.id !== TEST_SERVER_ID) {
+            return;
+        }
+
+        // Check they have the Active Testers role
+        if (message.member.roles.find(role => role.name === "Active Testers")) {
+            //remove the role
+            var testerRole = message.member.guild.roles.find(role => role.name === "Active Testers");
+            message.member.removeRole(testerRole, "Command issued.");
+            reply(message, "Your Active Testers role has been removed.");
+        }
+        else {
+            reply(message, "You don't have the Active Testers role. Use `" + PREFIX + "tester` to get it.");
         }
     },
 
