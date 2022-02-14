@@ -10,7 +10,8 @@ const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREF
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
 var bot;
-const BINGOCHANNELID = "395460192420233216";
+// const BINGOCHANNELID = "395460192420233216";
+const BINGOCHANNELID = "394292189368287255";
 const CHALLENGECHANNELID = "146030310767722496";
 const BINGOTIMEOUT = 5000;
 const IOUTEAMROLEID = "146018825744154624";
@@ -888,10 +889,11 @@ exports.functions = {
         }
         //add the role
         var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
+        message.member.addRole(bingoRole, "Command issued.")
+            .catch(err => console.log(err));
         message.channel.send("Your bingo role has been added.")
             .then(m => m.delete(BINGOTIMEOUT))
             .catch(err => console.log(err));
-        message.member.addRole(bingoRole, "Command issued.");
     },
     bingoremove: function(message) {
         //check we're in bingo channel
@@ -902,10 +904,12 @@ exports.functions = {
         if (message.member.roles.find(role => role.name === "bingo")) {
             //remove the role
             var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
+            message.member.removeRole(bingoRole, "Command issued.")
+                .catch(err => console.log(err));
+
             message.channel.send("Your bingo role has been removed.")
                 .then(m => m.delete(BINGOTIMEOUT))
                 .catch(err => console.log(err));
-            message.member.removeRole(bingoRole, "Command issued.");
         }
         else {
             message.channel.send("You don't have the bingo role. Use `" + PREFIX + "bingoadd` to get it.")
