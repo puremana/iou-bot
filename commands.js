@@ -79,7 +79,7 @@ exports.functions = {
         var additionalGuild = "";
     
         if (message.member != null) {
-            if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+            if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
                 showingRoles = "IOU Team";
                 additionalBot = PREFIX + "add *(IOU Team only)* - `" + PREFIX + "add command-name description` \n" +  
                 PREFIX + "remove *(IOU Team only)* - `" + PREFIX + "remove command-name` \n";
@@ -89,7 +89,7 @@ exports.functions = {
                 additionalGuild = additionalParty + PREFIX + "resetguilds *(IOU Team only)* \n";
                 additionalGuild = additionalParty + PREFIX + "removepartyname *(IOU Team only)* \n";
             }
-            else if (message.member.roles.find(role => role.name === "Spun & Spud")) {
+            else if (message.member.roles.cache.find(role => role.name === "Spun & Spud")) {
                 showingRoles = "Spun & Spud";
             }
             else {
@@ -155,8 +155,8 @@ exports.functions = {
         PREFIX + "flip " +
         PREFIX + "8ball ";
     
-        var embed = new Discord.RichEmbed()
-        .setAuthor("Showing commands for - " + showingRoles, message.author.avatarURL)
+        var embed = new Discord.MessageEmbed()
+        .setAuthor("Showing commands for - " + showingRoles, message.author.avatarURL())
         .addField("Bot Related Commands", botRelated, true)
         .addField("Challenge Commands", challengeCommands, true)
         .addField("Party/Guild Commands", partyGuild)
@@ -176,11 +176,11 @@ exports.functions = {
         message.author.send(embed);
     }, 
     info: function(message) {
-        var embed = new Discord.RichEmbed()
+        var embed = new Discord.MessageEmbed()
         .addField(BOTNAME, BOTNAME + BOTDESC)
         .setColor(0x9B59B6)
         .setFooter("Source code: https://github.com/puremana/iou-bot")
-        .setThumbnail(bot.user.avatarURL)
+        .setThumbnail(bot.user.avatarURL())
         reply(message, embed);
     },
     serverinfo: function(message) {
@@ -189,28 +189,29 @@ exports.functions = {
         }
         var botCount = 0;
         var totalMembers = message.guild.memberCount;
+
         var activeMembers = 0;
         //loop through members
-        for (u in message.guild.members.array()) {
-            if (message.guild.members.array()[u].user.bot == true) {
+        for (u in message.guild.members.cache.array()) {
+            if (message.guild.members.cache.array()[u].user.bot == true) {
                 botCount++;
             }
-            if (message.guild.members.array()[u].presence.status != "offline") {
+            else if (message.guild.members.cache.array()[u].user.presence.status != "offline") {
                 activeMembers++;
             }
         }
-        var embed = new Discord.RichEmbed()
-        .setAuthor(BOTNAME, bot.user.avatarURL)
+        var embed = new Discord.MessageEmbed()
+        .setAuthor(BOTNAME, bot.user.avatarURL())
         .setTitle("Server Info - " + message.guild.name)
         .setColor(0x9B59B6)
-        .setThumbnail(message.guild.iconURL)
+        .setThumbnail(message.guild.iconURL())
         .addField("Bots", botCount, true)
         .addField("Owner", message.guild.owner, true)
         .addField("Active Members", activeMembers, true)
-        .addField("Region", message.guild.region, true)
+        .addField("Region", message.guild.preferredLocale, true)
         .addField("Total Members", totalMembers, true)
         .addField("Invite Link", "https://discord.gg/WfcvtZm", true)
-        .setFooter("Server creation - " + message.guild.createdAt, message.guild.owner.user.avatarURL)
+        .setFooter("Server creation - " + message.guild.createdAt, message.guild.owner.user.avatarURL())
         
         reply(message, embed);
     },
@@ -223,7 +224,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             if (args.length < 3) {
                 reply(message, "Please enter the command in the format `" + PREFIX + "add command_name command description`.");
                 return;
@@ -247,7 +248,7 @@ exports.functions = {
             return;
         }
         var args = message.content.substring(PREFIX.length).split(" ");
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             if (args.length == 2) {
                 for (c in customCommands) {
                     if (args[1].toLowerCase() == c) {
@@ -273,7 +274,7 @@ exports.functions = {
             reply(message, "Message author is undefined.");
             return;
         }
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             var args = message.content.substring(PREFIX.length).split(" ");
             var user = bot.users.find(user => user.id === args[1]);
             var rules = "**1)**    No spamming or flooding the chat with messages outside of #spam. \n" +
@@ -284,7 +285,7 @@ exports.functions = {
             "**6)**    Be respectful of others within reason (this includes the IOU Team). \n" +
             "**7)**    Do not ask for personal information";
 
-            var embed = new Discord.RichEmbed()
+            var embed = new Discord.MessageEmbed()
             .addField("Rules for the IOURPG Discord", rules)
             .setColor(0xF33900)
             .setFooter("Rules sent from " + message.author.username);
@@ -299,12 +300,12 @@ exports.functions = {
             reply(message, "Message author is undefined.");
             return;
         }
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             var text = message.content.substring(PREFIX.length + 5);
             reply(message, text);
             if (message.channel.type != "dm") {
                 try {
-                    message.delete(0);
+                    message.delete({timeout:0});
                 } catch (err) {
                     console.log(err)
                 }
@@ -370,7 +371,7 @@ exports.functions = {
             reply(message, "Message author is undefined.");
             return;
         }
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             var name = message.content.substring(PREFIX.length + "removepartyname".length + 1);
             for (party in parties) {
                 if (parties[party][1] == name) {
@@ -391,7 +392,7 @@ exports.functions = {
             reply(message, "Message author is undefined.");
             return;
         }
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             parties = {};
             parties["id"] = ['time','name','required dps','description'];
             fs.writeFile("storage/parties.json", JSON.stringify(parties), "utf8");
@@ -403,7 +404,7 @@ exports.functions = {
     },
     parties: function(message) {
         for (p in parties) {
-            var embed = new Discord.RichEmbed()
+            var embed = new Discord.MessageEmbed()
             .addField(parties[p][1] + " - " + parties[p][2], parties[p][3])
             .setColor(0x1A8CBE)
             .setFooter(parties[p][0])
@@ -493,7 +494,7 @@ exports.functions = {
             reply(message, "Message author is undefined.");
             return;
         }
-        if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID)) {
+        if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID)) {
             guilds = {};
             fs.writeFile("storage/guilds.json", JSON.stringify(guilds), "utf8");
             reply(message, "All guilds have been reset.");
@@ -521,7 +522,7 @@ exports.functions = {
     guilds: function(message) {
         for (g in guilds) {
             if (guilds[g][0] == "format") {
-                var embed = new Discord.RichEmbed()
+                var embed = new Discord.MessageEmbed()
                 .addField(guilds[g][3] + " - " + guilds[g][2], guilds[g][10])
                 .addField("Guild Level", guilds[g][4], true)
                 .addField("Guild Buildings", guilds[g][5], true)
@@ -533,7 +534,7 @@ exports.functions = {
                 .setFooter(guilds[g][1])
             }
             else {
-                var embed = new Discord.RichEmbed()
+                var embed = new Discord.MessageEmbed()
                 .addField(guilds[g][3] + " - " + guilds[g][2], guilds[g][4])
                 .setColor(0xFFC300)
                 .setFooter(guilds[g][1])
@@ -720,7 +721,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to close poll
-                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't already closed
                     if (votes[v]["closed"] == true) {
                         reply(message, "This poll has already been closed.");
@@ -750,7 +751,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to close poll
-                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //check the poll isn't open
                     if (votes[v]["closed"] == false) {
                         reply(message, "This poll is already open.");
@@ -780,7 +781,7 @@ exports.functions = {
         for (v in votes) {
             if (v == rawSplit[1]) {
                 //check they have permissions to delete
-                if (message.member.roles.has(IOUTEAMROLEID) || message.member.roles.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
+                if (message.member.roles.cache.has(IOUTEAMROLEID) || message.member.roles.cache.has(HELPERROLEID) || message.member.id == vote[v]["author"]) {
                     //delete poll
                     delete votes[v];
                     reply(message, "Poll **" + rawSplit[1] + "** is now deleted.");
@@ -825,13 +826,13 @@ exports.functions = {
         }
 
         // Check doesn't already have Active Testers role
-        if (message.member.roles.find(role => role.name === "Active Testers")) {
+        if (message.member.roles.cache.find(role => role.name === "Active Testers")) {
             reply(message, "You already have the Active Testers role. Use `" + PREFIX + "notester` to remove it.");
             return;
         }
         // Add the role
-        var testerRole = message.member.guild.roles.find(role => role.name === "Active Testers");
-        message.member.addRole(testerRole, "Command issued.");
+        var testerRole = message.member.guild.roles.cache.find(role => role.name === "Active Testers");
+        message.member.roles.add(testerRole);
         reply(message, "Your Active Testers role has been added.");
     },
     notester: function(message) {
@@ -840,10 +841,10 @@ exports.functions = {
         }
 
         // Check they have the Active Testers role
-        if (message.member.roles.find(role => role.name === "Active Testers")) {
+        if (message.member.roles.cache.find(role => role.name === "Active Testers")) {
             //remove the role
-            var testerRole = message.member.guild.roles.find(role => role.name === "Active Testers");
-            message.member.removeRole(testerRole, "Command issued.");
+            var testerRole = message.member.guild.roles.cache.find(role => role.name === "Active Testers");
+            message.member.roles.remove(testerRole);
             reply(message, "Your Active Testers role has been removed.");
         }
         else {
@@ -881,18 +882,18 @@ exports.functions = {
             return;
         }
         //check doesn't already have bingo role
-        if (message.member.roles.find(role => role.name === "bingo")) {
+        if (message.member.roles.cache.find(role => role.name === "bingo")) {
             message.channel.send("You already have the bingo role. Use `" + PREFIX + "bingoremove` to remove it.")
-                .then(m => m.delete(BINGOTIMEOUT))
+                .then(m => m.delete({timeout: BINGOTIMEOUT}))
                 .catch(err => console.log(err));
             return;
         }
         //add the role
-        var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
-        message.member.addRole(bingoRole, "Command issued.")
+        var bingoRole = message.member.guild.roles.cache.find(role => role.name === "bingo");
+        message.member.roles.add(bingoRole)
             .catch(err => console.log(err));
         message.channel.send("Your bingo role has been added.")
-            .then(m => m.delete(BINGOTIMEOUT))
+            .then(m => m.delete({timeout: BINGOTIMEOUT}))
             .catch(err => console.log(err));
     },
     bingoremove: function(message) {
@@ -901,19 +902,23 @@ exports.functions = {
             return;
         }
         //check they have the bingo role
-        if (message.member.roles.find(role => role.name === "bingo")) {
+        if (message.member.roles.cache.find(role => role.name === "bingo")) {
             //remove the role
-            var bingoRole = message.member.guild.roles.find(role => role.name === "bingo");
-            message.member.removeRole(bingoRole, "Command issued.")
+            var bingoRole = message.member.guild.roles.cache.find(role => role.name === "bingo");
+            message.channel.send(bingoRole.id)
+                .then(m => m.delete({timeout: BINGOTIMEOUT}))
+                .catch(err => console.log(err));
+
+            message.member.roles.remove(bingoRole)
                 .catch(err => console.log(err));
 
             message.channel.send("Your bingo role has been removed.")
-                .then(m => m.delete(BINGOTIMEOUT))
+                .then(m => m.delete({timeout: BINGOTIMEOUT}))
                 .catch(err => console.log(err));
         }
         else {
             message.channel.send("You don't have the bingo role. Use `" + PREFIX + "bingoadd` to get it.")
-                .then(m => m.delete(BINGOTIMEOUT))
+                .then(m => m.delete({timeout: BINGOTIMEOUT}))
                 .catch(err => console.log(err));
         }
     },

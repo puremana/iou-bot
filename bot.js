@@ -91,7 +91,7 @@ bot.login(TOKEN);
 
 var deleteMessage = function(message) {
     if (message.channel.type != "dm") {
-        message.delete(TIMEOUT)
+        message.delete({timeout: TIMEOUT})
             .catch(err => console.log(err));
     }
 }
