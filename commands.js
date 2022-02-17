@@ -866,7 +866,7 @@ exports.functions = {
         reply(message, "http://iourpg.wikia.com/wiki/Idle_Online_Universe_Wiki");
     },
     cards: function(message) {
-        reply(message, "http://iouhelper.com/cards.html");
+        reply(message, "https://iou-card-calculator.web.app/");
     },
     test: function(message) {
         reply(message, "https://discord.gg/ncEarFv");
