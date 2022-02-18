@@ -10,8 +10,8 @@ const BOTDESC = " is made with love (and nodejs) by Level \n" + "Type **" + PREF
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var boolFunCommands = false;
 var bot;
-// const BINGOCHANNELID = "395460192420233216";
-const BINGOCHANNELID = "394292189368287255";
+const BINGOCHANNELID = "395460192420233216";
+// const BINGOCHANNELID = "394292189368287255";
 const CHALLENGECHANNELID = "146030310767722496";
 const BINGOTIMEOUT = 5000;
 const IOUTEAMROLEID = "146018825744154624";
@@ -905,9 +905,6 @@ exports.functions = {
         if (message.member.roles.cache.find(role => role.name === "bingo")) {
             //remove the role
             var bingoRole = message.member.guild.roles.cache.find(role => role.name === "bingo");
-            message.channel.send(bingoRole.id)
-                .then(m => m.delete({timeout: BINGOTIMEOUT}))
-                .catch(err => console.log(err));
 
             message.member.roles.remove(bingoRole)
                 .catch(err => console.log(err));
