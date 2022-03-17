@@ -28,8 +28,16 @@ rule.minute = 50;
 rule.tz = 'America/Indiana/Indianapolis';
 
 var bingoFunction = schedule.scheduleJob(rule, function() {
-    var bingoRole = bot.guilds.find(val => val.id === serverID).roles.find(bin => bin.name === "bingo");
-    bot.guilds.find(val => val.id === serverID).channels.find(bin => bin.name === "bingo").send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
+    bot.guilds.fetch(serverID)
+        .then(guild => {
+            var bingoRole = guild.roles.cache.find(r => r.name === "bingo")
+            var channel = guild.channels.cache.find(bin => bin.name === "bingo");
+            channel.send("<@&" + bingoRole.id + "> 10 Minutes till Bingo! :tada:");
+        })
+        .catch(error => {
+            console.log("Failed to fetch Guild for bingo function.")
+            console.log(error)
+        })
 });
 
 commands.setters["setBingoFunction"](bingoFunction);
